@@ -9,8 +9,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-
-<GridPane alignment="center" hgap="10" prefHeight="600.0" prefWidth="500.0" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="sample.Controller">
+<GridPane alignment="center" hgap="10" prefHeight="600.0" prefWidth="500.0" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.VenueBookingSystem">
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
@@ -25,7 +24,7 @@
    <children>
       <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <HBox alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0">
+            <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0" visible="false">
                <children>
                   <Button fx:id="btBook" mnemonicParsing="false" text="Book Event" />
                   <Button fx:id="btCancel" mnemonicParsing="false" text="Cancel Booking" />
@@ -33,6 +32,17 @@
                   <Button fx:id="btCal" mnemonicParsing="false" text="Event Calendar" />
                </children>
             </HBox>
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="80.0" prefHeight="300.0" prefWidth="400.0">
+               <children>
+                  <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
+                  <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
+                  <Label layoutX="67.0" layoutY="168.0" text="Password:" />
+                  <Label layoutX="67.0" layoutY="128.0" text="Client ID:" />
+                  <Label layoutX="145.0" layoutY="89.0" text="Existing User:" />
+                  <Button fx:id="btLogin" layoutX="145.0" layoutY="206.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
+                  <Button fx:id="btNewUser" layoutX="229.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleNewUser" text="New User" />
+               </children>
+            </Pane>
          </children>
       </Pane>
    </children>
