@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -41,6 +42,33 @@
                   <Label layoutX="145.0" layoutY="89.0" text="Existing User:" />
                   <Button fx:id="btLogin" layoutX="145.0" layoutY="206.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
                   <Button fx:id="btNewUser" layoutX="229.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleNewUser" text="New User" />
+                  <Label fx:id="msgText" layoutX="67.0" layoutY="247.0" prefHeight="17.0" prefWidth="305.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="registerPane" layoutX="41.0" layoutY="80.0" prefHeight="400.0" prefWidth="400.0" visible="false">
+               <children>
+                  <VBox layoutX="186.0" layoutY="10.0" prefHeight="220.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <TextField fx:id="newIDField" />
+                        <PasswordField fx:id="newPassField" />
+                        <TextField fx:id="newFNField" />
+                        <TextField fx:id="newLNField" />
+                        <TextField fx:id="newPhoneField" />
+                        <TextField fx:id="newEmailField" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_RIGHT" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="160.0" spacing="20.0">
+                     <children>
+                        <Label text="ID (must be unique):" />
+                        <Label text="Password:" />
+                        <Label text="First Name:" />
+                        <Label text="Last Name:" />
+                        <Label text="Phone Number:" />
+                        <Label text="Email:" />
+                     </children>
+                  </VBox>
+                  <Button fx:id="btRegister" layoutX="186.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleReg" text="Register New User" />
+                  <Label fx:id="msgText" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
                </children>
             </Pane>
          </children>

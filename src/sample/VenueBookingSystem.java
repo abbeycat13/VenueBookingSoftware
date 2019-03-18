@@ -1,9 +1,15 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
+import java.sql.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,8 +29,68 @@ public class VenueBookingSystem extends Application {
         primaryStage.show();
     }
 
+    Client client;
+
+    @FXML
+    TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField, newEmailField;
+    @FXML
+    PasswordField passwordField, newPassField;
+    @FXML
+    Label msgText;
+    @FXML
+    HBox menuBar;
+    @FXML
+    Pane loginPane, registerPane;
+
+    @FXML
+    private void handleLogin(ActionEvent event) {
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:clients.db");
+            Statement statement = conn.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS clients (id TEXT, password TEXT, firstName TEXT, lastName TEXT, phone INTEGER, email TEXT)");
+
+            // search database for client ID
+            ResultSet rs = statement.executeQuery("SELECT * FROM clients");
+            boolean loginSuccess = false;
+            while (rs.next() && !loginSuccess) { // searches until login is successful or there are no more records
+                if (clientIDField.getText().equals(rs.getString("id")))
+                // if ID found, check if password matches
+                    if (passwordField.getText().equals(rs.getString("password")))
+                    {
+                        loginPane.setVisible(false); // hide login screen
+                        menuBar.setVisible(true); // show menu bar
+                        // initialize client details
+                        client = new Client(rs.getString("id"), rs.getString("password"),
+                                rs.getString("firstName"), rs.getString("lastName"),
+                                rs.getInt("phone"), rs.getString("email"));
+                        loginSuccess = true; // stop searching
+                    }
+            }
+            // if not found, print error message
+            if (!loginSuccess)
+                msgText.setText("Login failed. Try again or register a new user.");
+            statement.close();
+            conn.close();
+        } catch (SQLException e){
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleNewUser(ActionEvent event) {
+        loginPane.setVisible(false); // hide login screen
+        registerPane.setVisible(true); // show register screen
+    }
+
+    @FXML
+    private void handleReg(ActionEvent event) {
+        client = new Client();
+
+    }
 
     public static void main(String[] args) {
         launch(args);
     }
+
+
 }

@@ -1,3 +1,5 @@
+package sample;
+
 public class Venue {
 
     private String address;
