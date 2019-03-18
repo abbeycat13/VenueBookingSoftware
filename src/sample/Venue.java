@@ -7,7 +7,7 @@ public class Venue {
     private int capacity;
     private int phoneNum;
 
-    private void ViewAllEvents(){
-        System.out.println();
+    private void viewAllEvents(){
+
     }
 }

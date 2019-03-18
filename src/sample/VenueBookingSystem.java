@@ -45,10 +45,10 @@ public class VenueBookingSystem extends Application {
     @FXML
     private void handleLogin(ActionEvent event) {
         try{
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:clients.db");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
-            statement.execute("CREATE TABLE IF NOT EXISTS clients (id TEXT, password TEXT, firstName TEXT, lastName TEXT, phone INTEGER, email TEXT)");
-
+            statement.execute("CREATE TABLE IF NOT EXISTS clients (id TEXT, password TEXT, firstName TEXT, " +
+                    "lastName TEXT, phone INTEGER, email TEXT)");
             // search database for client ID
             ResultSet rs = statement.executeQuery("SELECT * FROM clients");
             boolean loginSuccess = false;
@@ -62,7 +62,7 @@ public class VenueBookingSystem extends Application {
                         // initialize client details
                         client = new Client(rs.getString("id"), rs.getString("password"),
                                 rs.getString("firstName"), rs.getString("lastName"),
-                                rs.getInt("phone"), rs.getString("email"));
+                                rs.getDouble("phone"), rs.getString("email"));
                         loginSuccess = true; // stop searching
                     }
             }
@@ -85,7 +85,24 @@ public class VenueBookingSystem extends Application {
     @FXML
     private void handleReg(ActionEvent event) {
         client = new Client();
+        client.setId(newIDField.getText());
+        client.setPassword(newPassField.getText());
+        client.setFirstName(newFNField.getText());
+        client.setLastName(newLNField.getText());
+        client.setPhoneNumber(newPhoneField.getText());
+        client.setEmailAddress(newEmailField.getText());
 
+        if (client.getId().equals("INVALID"))
+            msgText.setText("That ID is already in use.");
+        else if (client.getPhoneNumber() == 0)
+            msgText.setText("Invalid phone number. Please enter all 10 digits.");
+        else if (client.getEmailAddress().equals("INVALID"))
+            msgText.setText("Invalid email address.");
+        else {
+            client.addToDatabase();
+            registerPane.setVisible(false);
+            menuBar.setVisible(true);
+        }
     }
 
     public static void main(String[] args) {

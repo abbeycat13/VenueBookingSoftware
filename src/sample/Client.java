@@ -1,5 +1,10 @@
 package sample;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+
 import java.sql.*;
 
 public class Client {
@@ -8,7 +13,7 @@ public class Client {
     private String password;
     private String firstName;
     private String lastName;
-    private int phoneNumber;
+    private Double phoneNumber;
     private String emailAddress;
 
     /**
@@ -20,7 +25,8 @@ public class Client {
     /**
      *  CONSTRUCTOR
      */
-    public Client(String id, String password, String firstName, String lastName, int phoneNumber, String emailAddress) {
+    public Client(String id, String password, String firstName, String lastName, Double phoneNumber,
+                  String emailAddress) {
         this.id = id;
         this.password = password;
         this.firstName = firstName;
@@ -38,20 +44,22 @@ public class Client {
 
     /**
      * SET ID
+     * Note: Checks the client database to ensure that the ID is
+     * not already in use -- if it is, sets ID to "INVALID"
      */
     public void setId(String id) {
         try{
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:clients.db");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
-            statement.execute("CREATE TABLE IF NOT EXISTS clients (id TEXT, password TEXT, firstName TEXT, lastName TEXT, phone INTEGER, email TEXT)");
-
+            statement.execute("CREATE TABLE IF NOT EXISTS clients (id TEXT, password TEXT, firstName TEXT, " +
+                    "lastName TEXT, phone INTEGER, email TEXT)");
             // search database for client ID
             ResultSet rs = statement.executeQuery("SELECT * FROM clients");
             boolean idExists = false;
             while (rs.next() && !idExists) { // searches until ID is found or there are no more records
                 if (id.equals(rs.getString("id")))
                 {
-                    this.id = null;
+                    this.id = "INVALID";
                     idExists = true;
                 }
             }
@@ -110,18 +118,28 @@ public class Client {
     /**
      * GET PHONE NUMBER
      */
-    public int getPhoneNumber() {
+    public Double getPhoneNumber() {
         return phoneNumber;
     }
 
     /**
      * SET PHONE NUMBER
+     * Note: Removes all non-digits from input string before parsing to Double,
+     * and ensuring that the number is exactly 10 digits -- if invalid, sets to 0.0
      */
-    public void setPhoneNumber(int phoneNumber) {
-        if (phoneNumber < 1000000000 && phoneNumber > 99999999)
+    public void setPhoneNumber(String input) {
+        String digits = "";
+        Double phoneNumber = 0.0;
+        for (int i = 0; i < input.length(); ++i)
+        {
+            if (Character.isDigit(input.charAt(i)))
+                digits += input.charAt(i);
+        }
+        phoneNumber = phoneNumber.parseDouble(digits);
+        if (phoneNumber < 10000000000.0 && phoneNumber > 999999999.0)
             this.phoneNumber = phoneNumber;
         else
-            this.phoneNumber = 0;
+            this.phoneNumber = 0.0;
     }
 
     /**
@@ -133,33 +151,43 @@ public class Client {
 
     /**
      * SET EMAIL ADDRESS
+     * Note: Checks that input follows correct email address format: text@text.text --
+     * if invalid, sets to "INVALID"
      */
     public void setEmailAddress(String emailAddress) {
         boolean foundAt = false;
         boolean foundDot = false;
         int j = 0;
         for (int i = 0; i < emailAddress.length(); ++i){
-            if (emailAddress.charAt(i) == '@') {
+            // check if @ character is found anywhere except the first character
+            if (emailAddress.charAt(i) == '@' && i > 0) {
                 foundAt = true;
-                j = i;
+                j = i; // record where @ was found
             }
-            if (foundAt && i > j && emailAddress.charAt(i) == '.')
+            // check if . is found after @ and before the end of the input string
+            if (foundAt && i > j && emailAddress.charAt(i) == '.' && i < (emailAddress.length() - 1))
                 foundDot = true;
         }
         if (foundAt && foundDot)
             this.emailAddress = emailAddress;
         else
-            this.emailAddress = null;
+            this.emailAddress = "INVALID";
     }
 
-    public void ViewBookings(){
+
+
+    public void addToDatabase(){
+
     }
 
-    public void BookEvent(){
+    public void viewBookings(){
+    }
+
+    public void bookEvent(){
 
     }
 
-    public void CancelBooking(){
+    public void cancelBooking(){
 
     }
 }
