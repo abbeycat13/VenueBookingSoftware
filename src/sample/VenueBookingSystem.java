@@ -29,14 +29,15 @@ public class VenueBookingSystem extends Application {
 
     Client client;
 
+    /**
+     * Note: UI elements need to be declared here in order to be referenced in code
+     */
     @FXML
     TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField, newEmailField;
     @FXML
     PasswordField passwordField, newPassField;
     @FXML
     Label msgText, clientIDLabel;
-    @FXML
-    HBox menuBar;
     @FXML
     VBox bookingVBox;
     @FXML
@@ -57,13 +58,6 @@ public class VenueBookingSystem extends Application {
             Statement statement = conn.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS clients (id TEXT, password TEXT, firstName TEXT, " +
                     "lastName TEXT, phone INTEGER, email TEXT)");
-
-            // temporary stuff
-            statement.execute("CREATE TABLE IF NOT EXISTS venues (name TEXT, address TEXT, city TEXT, phone INTEGER, capacity INTEGER)");
-            statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, venue TEXT, privateEvent INTEGER, " +
-                    "date TEXT, startTime TEXT, endTime TEXT, fee REAL, feePaid INTEGER)");
-            // end temporary stuff
-
             // search database for client ID
             ResultSet rs = statement.executeQuery("SELECT * FROM clients");
             boolean loginSuccess = false;
@@ -74,7 +68,7 @@ public class VenueBookingSystem extends Application {
                     {
                         loginPane.setVisible(false); // hide login screen
                         mainPane.setVisible(true); // show main screen
-                        // load client details
+                        // load client details from database and store in client object
                         client = new Client(rs.getString("id"), rs.getString("password"),
                                 rs.getString("firstName"), rs.getString("lastName"),
                                 rs.getDouble("phone"), rs.getString("email"));
@@ -127,7 +121,7 @@ public class VenueBookingSystem extends Application {
         else {
             client.addToDatabase(); // add new client to database
             registerPane.setVisible(false); // hide register pane
-            mainPane.setVisible(true); // show menu bar
+            mainPane.setVisible(true); // show main screen
             clientIDLabel.setText(clientIDLabel.getText()+client.getFirstName()+" "+client.getLastName());
         }
     }
@@ -141,6 +135,13 @@ public class VenueBookingSystem extends Application {
     private void handleViewBookings(ActionEvent event) {
         if (!bookingVBox.isVisible()) {
             bookingVBox.setVisible(true);
+
+            /**
+             * Note: probably want to move the rest of this method to its own method within the
+             * client class, as the same code will probably be used for the 'Cancel Booking' button.
+             * In that case, probably need to pass VBox as parameter.
+             */
+
             // get client's bookings and store in array list
             ArrayList<EventBooking>clientBookings = client.viewBookings();
             // display data in array list

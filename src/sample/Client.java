@@ -14,7 +14,7 @@ public class Client {
     private String password;
     private String firstName;
     private String lastName;
-    private Double phoneNumber;
+    private Double phoneNumber; // this should be a Long (not Double) -- to be fixed
     private String emailAddress;
 
     /**
@@ -180,6 +180,8 @@ public class Client {
      * METHOD: addToDatabase
      * DESCRIPTION: searches the database for client ID -- if found, updates the data (password and contact
      * info only). If not found, creates a new record with the current client data.
+     *
+     * Note: works for creating new records. Unsure about updating existing records -- needs testing.
      */
     public void addToDatabase(){
         try{
@@ -213,18 +215,18 @@ public class Client {
 
     /**
      * METHOD: viewBookings
-     * DESCRIPTION: searches database for all of a client's bookings and stores them in an ArrayList
+     * DESCRIPTION: Searches database for all of a client's bookings and stores them in an ArrayList.
+     * Should be called when user clicks the 'View Bookings' button.
+     * RETURNS: ArrayList of EventBookings
      */
     public ArrayList<EventBooking> viewBookings(){
         ArrayList<EventBooking> clientBookings = new ArrayList<EventBooking>();
         try{
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
-
             statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
                     "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
                     "feePaid INTEGER)");
-
             // search event database for client ID
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
             while (rs.next()) {
@@ -252,11 +254,30 @@ public class Client {
         return clientBookings;
     }
 
-    public void bookEvent(){
+    /**
+     * METHOD: bookEvent
+     * DESCRIPTION: This method should receive the user's input somehow (maybe it takes an EventBooking as a
+     * parameter), then check the database to ensure that the venue is available on the selected date. If so,
+     * add new event data to event database. Else, allow the user to try again somehow.
+     * RETURNS: void? (probably -- or a string that will be shown on the UI)
+     *
+     * Note: call this method after user has filled out form with event details and attempts to book the event,
+     * NOT immediately when they press the 'Book Event' button at the top of the screen
+     */
+    public void bookEvent(EventBooking event){
 
     }
 
-    public void cancelBooking(){
+    /**
+     * METHOD: cancelBooking
+     * DESCRIPTION: This method should perform the mechanics of cancelling a client's booking. Probably accepts an
+     * EventBooking as parameter. It should remove the particular event from the database.
+     * RETURNS: void? (probably -- or a string that will be shown on the UI)
+     *
+     * Note: should be called after user has selected which booking they would like to cancel, NOT immediately when
+     * they press the 'Cancel Booking' button at the top of the screen
+     */
+    public void cancelBooking(EventBooking event){
 
     }
 }
