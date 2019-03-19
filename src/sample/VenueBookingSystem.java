@@ -3,21 +3,19 @@ package sample;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import java.sql.*;
+import java.util.ArrayList;
+import java.time.*;
+import java.text.*;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.BorderPane;
 
 public class VenueBookingSystem extends Application {
 
@@ -36,12 +34,22 @@ public class VenueBookingSystem extends Application {
     @FXML
     PasswordField passwordField, newPassField;
     @FXML
-    Label msgText;
+    Label msgText, clientIDLabel;
     @FXML
     HBox menuBar;
     @FXML
-    Pane loginPane, registerPane;
+    VBox bookingVBox;
+    @FXML
+    Pane loginPane, registerPane, mainPane;
+    @FXML
+    ScrollPane viewBookingsPane;
 
+    /**
+     * METHOD: handleLogin
+     * Runs when user clicks the 'Login' button.
+     * Checks if Client ID is in the database -- if found, checks if password matches.
+     * If not found, or password is incorrect, shows error message.
+     */
     @FXML
     private void handleLogin(ActionEvent event) {
         try{
@@ -49,6 +57,13 @@ public class VenueBookingSystem extends Application {
             Statement statement = conn.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS clients (id TEXT, password TEXT, firstName TEXT, " +
                     "lastName TEXT, phone INTEGER, email TEXT)");
+
+            // temporary stuff
+            statement.execute("CREATE TABLE IF NOT EXISTS venues (name TEXT, address TEXT, city TEXT, phone INTEGER, capacity INTEGER)");
+            statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, venue TEXT, privateEvent INTEGER, " +
+                    "date TEXT, startTime TEXT, endTime TEXT, fee REAL, feePaid INTEGER)");
+            // end temporary stuff
+
             // search database for client ID
             ResultSet rs = statement.executeQuery("SELECT * FROM clients");
             boolean loginSuccess = false;
@@ -58,11 +73,12 @@ public class VenueBookingSystem extends Application {
                     if (passwordField.getText().equals(rs.getString("password")))
                     {
                         loginPane.setVisible(false); // hide login screen
-                        menuBar.setVisible(true); // show menu bar
-                        // initialize client details
+                        mainPane.setVisible(true); // show main screen
+                        // load client details
                         client = new Client(rs.getString("id"), rs.getString("password"),
                                 rs.getString("firstName"), rs.getString("lastName"),
                                 rs.getDouble("phone"), rs.getString("email"));
+                        clientIDLabel.setText(clientIDLabel.getText()+client.getFirstName()+" "+client.getLastName());
                         loginSuccess = true; // stop searching
                     }
             }
@@ -76,12 +92,23 @@ public class VenueBookingSystem extends Application {
         }
     }
 
+    /**
+     * METHOD: handleNewUser
+     * Runs when user clicks the 'New User' button.
+     * Shows the registration screen.
+     */
     @FXML
     private void handleNewUser(ActionEvent event) {
         loginPane.setVisible(false); // hide login screen
         registerPane.setVisible(true); // show register screen
     }
 
+    /**
+     * METHOD: handleReg
+     * Runs when user clicks the 'Register New User' button.
+     * Instantiates a client with the input data. Shows error message if data is invalid.
+     * Else, adds the new client to the database and allows them into the system.
+     */
     @FXML
     private void handleReg(ActionEvent event) {
         client = new Client();
@@ -91,7 +118,6 @@ public class VenueBookingSystem extends Application {
         client.setLastName(newLNField.getText());
         client.setPhoneNumber(newPhoneField.getText());
         client.setEmailAddress(newEmailField.getText());
-
         if (client.getId().equals("INVALID"))
             msgText.setText("That ID is already in use.");
         else if (client.getPhoneNumber() == 0)
@@ -99,9 +125,39 @@ public class VenueBookingSystem extends Application {
         else if (client.getEmailAddress().equals("INVALID"))
             msgText.setText("Invalid email address.");
         else {
-            client.addToDatabase();
-            registerPane.setVisible(false);
-            menuBar.setVisible(true);
+            client.addToDatabase(); // add new client to database
+            registerPane.setVisible(false); // hide register pane
+            menuBar.setVisible(true); // show menu bar
+        }
+    }
+
+    /**
+     * METHOD: handleViewBookings
+     * Runs when user clicks the 'View Bookings' button.
+     */
+    @FXML
+    private void handleViewBookings(ActionEvent event) {
+        if (!bookingVBox.isVisible()) {
+            bookingVBox.setVisible(true);
+            // get client's bookings and store in array list
+            ArrayList<EventBooking>clientBookings = client.viewBookings();
+            // display data in array list
+            for (EventBooking eventBooking : clientBookings) {
+                Label dateLabel = new Label(eventBooking.getEventDate());
+                Label nameLabel = new Label(eventBooking.getEventName());
+                if (eventBooking.isPrivateEvent())
+                    nameLabel.setText(nameLabel.getText() + " (private event)");
+                Label timeLabel = new Label(eventBooking.getStartTime() + " - " + eventBooking.getEndTime());
+                Label venueLabel = new Label(eventBooking.getVenue());
+                Label feeLabel = new Label("Booking Fee: "+
+                        NumberFormat.getCurrencyInstance().format(eventBooking.getBookingFee())+ " Paid? ");
+                if (eventBooking.isFeePaid())
+                    feeLabel.setText(feeLabel.getText() + "Y");
+                else
+                    feeLabel.setText(feeLabel.getText() + "N");
+                Separator separator = new Separator();
+                bookingVBox.getChildren().addAll(dateLabel, nameLabel, timeLabel, venueLabel, feeLabel, separator);
+            }
         }
     }
 

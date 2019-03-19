@@ -6,6 +6,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Client {
 
@@ -175,12 +176,80 @@ public class Client {
     }
 
 
-
+    /**
+     * METHOD: addToDatabase
+     * DESCRIPTION: searches the database for client ID -- if found, updates the data (password and contact
+     * info only). If not found, creates a new record with the current client data.
+     */
     public void addToDatabase(){
-
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+            Statement statement = conn.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS clients (id TEXT, password TEXT, firstName TEXT, " +
+                    "lastName TEXT, phone INTEGER, email TEXT)");
+            // search database for client ID
+            ResultSet rs = statement.executeQuery("SELECT * FROM clients");
+            boolean idExists = false;
+            while (rs.next() && !idExists) { // searches until ID is found or there are no more records
+                if (id.equals(rs.getString("id")))
+                {
+                    statement.execute("UPDATE clients SET password = '"+this.getPassword()+"', phone = '"+
+                            this.getPhoneNumber()+"', email = '"+this.getEmailAddress()+"' WHERE id = '"+
+                            this.getId()+"'");
+                }
+            }
+            // if not found, create a new record
+            if (!idExists){
+                statement.execute("INSERT INTO clients (id, password, firstName, lastName, phone, email)" +
+                        "VALUES ('"+this.getId()+"', '"+this.getPassword()+"', '"+this.getFirstName()+ "', '"+
+                        this.getLastName()+"', '"+this.getPhoneNumber()+"', '"+this.getEmailAddress()+"')");
+            }
+            statement.close();
+            conn.close();
+        } catch (SQLException e){
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
     }
 
-    public void viewBookings(){
+    /**
+     * METHOD: viewBookings
+     * DESCRIPTION: searches database for all of a client's bookings and stores them in an ArrayList
+     */
+    public ArrayList<EventBooking> viewBookings(){
+        ArrayList<EventBooking> clientBookings = new ArrayList<EventBooking>();
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+            Statement statement = conn.createStatement();
+
+            statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
+                    "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
+                    "feePaid INTEGER)");
+
+            // search event database for client ID
+            ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
+            while (rs.next()) {
+                if (this.getId().equals(rs.getString("clientID")))
+                {
+                    // convert booleans
+                    boolean privateEvent = false;
+                    if (rs.getInt("privateEvent") == 1)
+                        privateEvent = true;
+                    boolean feePaid = false;
+                    if (rs.getInt("feePaid") == 1)
+                        feePaid = true;
+                    // instantiate an event from data and add to arraylist
+                    clientBookings.add(new EventBooking(rs.getString("name"), rs.getString("type"),
+                            rs.getString("clientID"), rs.getString("venue"), privateEvent,
+                            rs.getString("date"), rs.getInt("startTime"),
+                            rs.getInt("endTime"), rs.getDouble("fee"), feePaid));
+                }
+            }
+            statement.close();
+            conn.close();
+        } catch (SQLException e){
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+        return clientBookings;
     }
 
     public void bookEvent(){
