@@ -214,6 +214,35 @@ public class VenueBookingSystem extends Application {
 
     }
 
+    /**
+     * METHOD: handleLogOut
+     * Runs when user clicks the 'Log Out' button.
+     *
+     * Note: Very simple -- hide all panes except for the login pane.
+     * Maybe clear the client data (set all fields to null values).
+     */
+    @FXML
+    private void handleLogOut(ActionEvent event) {
+
+        // insert code here
+
+    }
+
+    /**
+     * METHOD: handleUpdateInfo
+     * Runs when user clicks the 'Update Contact Info' button.
+     *
+     * Note: Should show a form that allows the user to update their password,
+     * phone number, and/or email address. Use the client class setters, and
+     * call the addToDatabase method.
+     */
+    @FXML
+    private void handleUpdateInfo(ActionEvent event) {
+
+        // insert code here
+
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
