@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<GridPane alignment="center" hgap="10" prefHeight="600.0" prefWidth="500.0" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.VenueBookingSystem">
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+   <children>
+      <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0" visible="false">
+               <children>
+                  <Button fx:id="btBook" mnemonicParsing="false" text="Book Event" />
+                  <Button fx:id="btCancel" mnemonicParsing="false" text="Cancel Booking" />
+                  <Button fx:id="btView" mnemonicParsing="false" text="View Bookings" />
+                  <Button fx:id="btCal" mnemonicParsing="false" text="Event Calendar" />
+               </children>
+            </HBox>
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="80.0" prefHeight="300.0" prefWidth="400.0">
+               <children>
+                  <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
+                  <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
+                  <Label layoutX="67.0" layoutY="168.0" text="Password:" />
+                  <Label layoutX="67.0" layoutY="128.0" text="Client ID:" />
+                  <Label layoutX="145.0" layoutY="89.0" text="Existing User:" />
+                  <Button fx:id="btLogin" layoutX="145.0" layoutY="206.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
+                  <Button fx:id="btNewUser" layoutX="229.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleNewUser" text="New User" />
+                  <Label fx:id="msgText" layoutX="67.0" layoutY="247.0" prefHeight="17.0" prefWidth="305.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="registerPane" layoutX="41.0" layoutY="80.0" prefHeight="400.0" prefWidth="400.0" visible="false">
+               <children>
+                  <VBox layoutX="186.0" layoutY="10.0" prefHeight="220.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <TextField fx:id="newIDField" />
+                        <PasswordField fx:id="newPassField" />
+                        <TextField fx:id="newFNField" />
+                        <TextField fx:id="newLNField" />
+                        <TextField fx:id="newPhoneField" />
+                        <TextField fx:id="newEmailField" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_RIGHT" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="160.0" spacing="20.0">
+                     <children>
+                        <Label text="ID (must be unique):" />
+                        <Label text="Password:" />
+                        <Label text="First Name:" />
+                        <Label text="Last Name:" />
+                        <Label text="Phone Number:" />
+                        <Label text="Email:" />
+                     </children>
+                  </VBox>
+                  <Button fx:id="btRegister" layoutX="186.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleReg" text="Register New User" />
+                  <Label fx:id="msgText" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+   </children>
+</GridPane>
