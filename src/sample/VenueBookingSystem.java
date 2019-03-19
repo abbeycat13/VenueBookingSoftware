@@ -127,13 +127,15 @@ public class VenueBookingSystem extends Application {
         else {
             client.addToDatabase(); // add new client to database
             registerPane.setVisible(false); // hide register pane
-            menuBar.setVisible(true); // show menu bar
+            mainPane.setVisible(true); // show menu bar
+            clientIDLabel.setText(clientIDLabel.getText()+client.getFirstName()+" "+client.getLastName());
         }
     }
 
     /**
      * METHOD: handleViewBookings
      * Runs when user clicks the 'View Bookings' button.
+     * Calls the viewBookings method in Client class, then displays the client's current event bookings
      */
     @FXML
     private void handleViewBookings(ActionEvent event) {
