@@ -4,9 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import java.sql.*;
 import java.util.ArrayList;
-import java.time.*;
 import java.text.*;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,8 +12,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Pos;
+
+
+/**
+ * MAIN CODE FILE
+ * This file runs the software, and also controls the UI.
+ * ALL methods to do with buttons clicks and displaying
+ * things for the user should be here.
+ */
 
 public class VenueBookingSystem extends Application {
 
@@ -27,7 +31,7 @@ public class VenueBookingSystem extends Application {
         primaryStage.show();
     }
 
-    Client client;
+    private Client client;
 
     /**
      * Note: UI elements need to be declared here in order to be referenced in code
@@ -127,6 +131,37 @@ public class VenueBookingSystem extends Application {
     }
 
     /**
+     * METHOD: handleBookEvent
+     * Runs when user clicks the 'Book Event' button.
+     *
+     * Note: This method should show a form to collect the event info from the user.
+     * Open sample.fxml in Scene Builder to set this up.
+     * Then should probably instantiate EventBooking object from data and pass to
+     * client.bookEvent method
+     */
+    @FXML
+    private void handleBookEvent(ActionEvent event) {
+
+        // insert code here
+
+    }
+
+    /**
+     * METHOD: handleCancelBooking
+     * Runs when user clicks the 'Cancel Booking' button.
+     *
+     * Note: This method should display all of a client's current bookings,
+     * and somehow allow them to indicate which one they want to cancel.
+     * Then call client.cancelBooking to do the actual cancelling.
+     */
+    @FXML
+    private void handleCancelBooking(ActionEvent event) {
+
+        // insert code here
+
+    }
+
+    /**
      * METHOD: handleViewBookings
      * Runs when user clicks the 'View Bookings' button.
      * Calls the viewBookings method in Client class, then displays the client's current event bookings
@@ -164,9 +199,22 @@ public class VenueBookingSystem extends Application {
         }
     }
 
+    /**
+     * METHOD: handleEventCal
+     * Runs when user clicks the 'Event Calendar' button.
+     *
+     * Note: This method should show a drop-down menu of venues, then when a venue is selected,
+     * display all the events at that particular venue.
+     * OR... This method can simply display all the events in the database.
+     */
+    @FXML
+    private void handleEventCal(ActionEvent event) {
+
+        // insert code here
+
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }

@@ -1,12 +1,13 @@
 package sample;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-
 import java.sql.*;
 import java.util.ArrayList;
+
+/**
+ * CLIENT CLASS
+ * This file contains the Client class, and methods to control the client's event bookings.
+ * METHODS: addToDatabase, bookEvent, cancelBooking, viewBookings
+ */
 
 public class Client {
 
@@ -178,7 +179,7 @@ public class Client {
 
     /**
      * METHOD: addToDatabase
-     * DESCRIPTION: searches the database for client ID -- if found, updates the data (password and contact
+     * DESCRIPTION: Searches the database for client ID -- if found, updates the data (password and contact
      * info only). If not found, creates a new record with the current client data.
      *
      * Note: works for creating new records. Unsure about updating existing records -- needs testing.
@@ -266,6 +267,8 @@ public class Client {
      */
     public void bookEvent(EventBooking event){
 
+        // insert code here
+
     }
 
     /**
@@ -278,6 +281,8 @@ public class Client {
      * they press the 'Cancel Booking' button at the top of the screen
      */
     public void cancelBooking(EventBooking event){
+
+        // insert code here
 
     }
 }

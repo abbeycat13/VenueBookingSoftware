@@ -1,6 +1,9 @@
 package sample;
 
-import java.util.Date;
+/**
+ * EVENT BOOKING CLASS
+ * This file contains the EventBooking class -- used to create objects containing event info
+ */
 
 public class EventBooking {
     private String eventName;

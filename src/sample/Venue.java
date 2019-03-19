@@ -1,5 +1,10 @@
 package sample;
 
+/**
+ * VENUE CLASS
+ * This file contains the Venue class -- used to create objects containing venue info
+ */
+
 public class Venue {
 
     private String address;
