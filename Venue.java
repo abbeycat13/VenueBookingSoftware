@@ -1,15 +1,16 @@
 package sample;
 
+/**
+ * VENUE CLASS
+ * This file contains the Venue class -- used to create objects containing venue info
+ */
+
 public class Venue {
 
     private String address;
     private String city;
     private int capacity;
-    private int phoneNum;
-
-    private void ViewAllEvents(){
-        System.out.println();
-    }
+    private Long phoneNum;
 
     /**
      * no arg constructor
@@ -20,7 +21,7 @@ public class Venue {
     /**
      * constructor
      */
-    public Venue(String address, String city, int capacity, int phoneNum) {
+    public Venue(String address, String city, int capacity, Long phoneNum) {
         this.address = address;
         this.city = city;
         this.capacity = capacity;
@@ -40,6 +41,7 @@ public class Venue {
     public void setAddress(String address) {
         this.address = address;
     }
+
     /**
      * GET CITY
      */
@@ -71,14 +73,19 @@ public class Venue {
     /**
      * GET PHONE NUM
      */
-    public int getPhoneNum() {
+    public Long getPhoneNum() {
         return phoneNum;
     }
 
     /**
      * SET PHONE NUM
      */
-    public void setPhoneNum(int phoneNum) {
+    public void setPhoneNum(Long phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+
+    private void viewAllEvents(){
+
     }
 }
