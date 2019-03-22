@@ -25,15 +25,7 @@
    <children>
       <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0" visible="false">
-               <children>
-                  <Button fx:id="btBook" mnemonicParsing="false" text="Book Event" />
-                  <Button fx:id="btCancel" mnemonicParsing="false" text="Cancel Booking" />
-                  <Button fx:id="btView" mnemonicParsing="false" text="View Bookings" />
-                  <Button fx:id="btCal" mnemonicParsing="false" text="Event Calendar" />
-               </children>
-            </HBox>
-            <Pane fx:id="loginPane" layoutX="40.0" layoutY="80.0" prefHeight="300.0" prefWidth="400.0">
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="80.0" prefHeight="300.0" prefWidth="400.0" visible="false">
                <children>
                   <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
                   <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
@@ -69,6 +61,31 @@
                   </VBox>
                   <Button fx:id="btRegister" layoutX="186.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleReg" text="Register New User" />
                   <Label fx:id="msgText" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0">
+               <children>
+                  <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="42.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0">
+                     <children>
+                        <Button fx:id="btBook" mnemonicParsing="false" onAction="#handleBookEvent" text="Book Event" />
+                        <Button fx:id="btCancel" mnemonicParsing="false" onAction="#handleCancelBooking" text="Cancel Booking" />
+                        <Button fx:id="btView" mnemonicParsing="false" onAction="#handleViewBookings" text="View Bookings" />
+                        <Button fx:id="btCal" mnemonicParsing="false" onAction="#handleEventCal" text="Event Calendar" />
+                     </children>
+                  </HBox>
+                  <Label fx:id="clientIDLabel" layoutX="14.0" layoutY="14.0" text="Client: " />
+                  <ScrollPane fx:id="viewBookingsPane" layoutX="14.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0">
+                     <content>
+                        <VBox fx:id="bookingVBox" alignment="TOP_CENTER" prefHeight="460.0" prefWidth="440.0" spacing="20.0" visible="false" />
+                         <VBox fx:id="bookEventVBox" alignment="TOP_CENTER" prefHeight="460.0" prefWidth="440.0" spacing="20.0" visible="false" />
+                     </content>
+                  </ScrollPane>
+                  <HBox alignment="BOTTOM_RIGHT" layoutX="14.0" layoutY="515.0" prefHeight="38.0" prefWidth="455.0" spacing="10.0">
+                     <children>
+                        <Button fx:id="btUpdateInfo" mnemonicParsing="false" onAction="#handleUpdateInfo" text="Update Contact Info" />
+                        <Button fx:id="btLogOut" mnemonicParsing="false" onAction="#handleLogOut" text="Log Out" />
+                     </children>
+                  </HBox>
                </children>
             </Pane>
          </children>
