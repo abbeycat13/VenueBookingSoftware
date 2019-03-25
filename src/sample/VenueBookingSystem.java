@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.xml.internal.ws.commons.xmlutil.Converter;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import java.sql.*;
@@ -12,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
+
+import javax.xml.soap.Text;
 
 
 /**
@@ -45,7 +48,7 @@ public class VenueBookingSystem extends Application {
     @FXML
     VBox bookingVBox;
     @FXML
-    Pane loginPane, registerPane, mainPane;
+    Pane loginPane, registerPane, mainPane, bookingsPane;
     @FXML
     ScrollPane viewBookingsPane;
 
@@ -141,9 +144,47 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleBookEvent(ActionEvent event) {
-
-        // insert code here
-
+        EventBooking eventBooking = new EventBooking();
+        client = new Client();
+        Venue venue = new Venue();
+        bookingsPane.setVisible(true);
+        int start, end, date;
+        Button yes = new Button("Yes");
+        Button no = new Button("No");
+        TextField name = new TextField();
+        TextField type = new TextField();
+        TextField startField = new TextField();
+        TextField endField = new TextField();
+        TextField addressField = new TextField();
+        TextField cityField = new TextField();
+        TextField capField = new TextField();
+        TextField dateField = new TextField();
+        Label paidLbl = new Label("Have you paid for this event?");
+        Label privateLbl = new Label("Is this a private event?");
+        date = Integer.parseInt(dateField.getText());
+        start = Integer.parseInt(startField.getText());
+        end = Integer.parseInt(endField.getText());
+        eventBooking.setEventName(name.getText());
+        eventBooking.setEventType(type.getText());
+        eventBooking.setEventDate(Integer.toString(date));
+        eventBooking.setStartTime(start);
+        eventBooking.setEndTime(end);
+        if (yes.isPressed())
+            eventBooking.setFeePaid(true);
+        else if (no.isPressed())
+            eventBooking.setFeePaid(false);
+        if (yes.isPressed()) {
+            eventBooking.setPrivateEvent(true);
+            privateLbl.setText("You re booking a private event.");
+        }
+        else if (no.isPressed()) {
+            eventBooking.setPrivateEvent(false);
+            privateLbl.setText("You're booking a public event.");
+        }
+        venue.setAddress(addressField.getText());
+        venue.setCity(cityField.getText());
+        venue.setCapacity(Integer.parseInt(capField.getText()));
+        client.bookEvent(eventBooking);
     }
 
     /**
@@ -156,8 +197,8 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleCancelBooking(ActionEvent event) {
-
-        // insert code here
+        client.viewBookings();
+        //client.cancelBooking();
 
     }
 
@@ -209,8 +250,12 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleEventCal(ActionEvent event) {
-
-        // insert code here
+        EventBooking eventBooking = new EventBooking();
+        bookingVBox.setVisible(true);
+        Label dateLabel = new Label(eventBooking.getEventDate());
+        Label nameLabel = new Label(eventBooking.getEventName());
+        Label timeLabel = new Label(eventBooking.getStartTime() + " - " + eventBooking.getEndTime());
+        Label venueLabel = new Label(eventBooking.getVenue());
 
     }
 
@@ -223,9 +268,15 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleLogOut(ActionEvent event) {
-
-        // insert code here
-
+        client.setId(null);
+        client.setPassword(null);
+        client.setFirstName(null);
+        client.setLastName(null);
+        client.setPhoneNumber(null);
+        client.setEmailAddress(null);
+        viewBookingsPane.setVisible(false);
+        mainPane.setVisible(false);
+        loginPane.setVisible(true);
     }
 
     /**
@@ -238,8 +289,12 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleUpdateInfo(ActionEvent event) {
-
-        // insert code here
+        client.setId(newIDField.getText());
+        client.setPassword(newPassField.getText());
+        client.setFirstName(newFNField.getText());
+        client.setLastName(newLNField.getText());
+        client.setPhoneNumber(newPhoneField.getText());
+        client.setEmailAddress(newEmailField.getText());
 
     }
 

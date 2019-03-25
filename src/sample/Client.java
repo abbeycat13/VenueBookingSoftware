@@ -2,6 +2,7 @@ package sample;
 
 import java.sql.*;
 import java.util.ArrayList;
+import javafx.scene.*;
 
 /**
  * CLIENT CLASS
@@ -266,8 +267,41 @@ public class Client {
      * NOT immediately when they press the 'Book Event' button at the top of the screen
      */
     public void bookEvent(EventBooking event){
+        String ID = event.getClientID();
+        String venue = event.getVenue();
+        String name = event.getEventName();
+        String type =  event.getEventType();
+        String date = event.getEventDate();
+        int start = event.getStartTime();
+        int end = event.getEndTime();
+        double fee = event.getBookingFee();
+        boolean feePaid = event.isFeePaid();
+        boolean privateEvent = event.isPrivateEvent();
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+            Statement statement = conn.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
+                    "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
+                    "feePaid INTEGER)");
+            // search event database for client ID
+            ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
+            if (rs.getString("Venue").equals(venue)){
+                if(rs.getString("Date").equals(date)){
+                    //Label bookingFailed = new Label("This date is already booked.");
+                }
+                else
+                    statement.execute("INSERT INTO events (name, type, clientID,  privateEvent, date, start, end, fee, feePaid)" +
+                            "VALUES ('"+name+"', '"+type+"', '"+ID+"', '"+privateEvent
+                            +"', '"+date+"', '"+start+"', '" +end+"', '"+fee+"', '"+feePaid+ "')");
+            }
+            statement.close();
+            conn.close();
+        } catch (SQLException e){
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
 
-        // insert code here
+
+
 
     }
 
@@ -281,8 +315,37 @@ public class Client {
      * they press the 'Cancel Booking' button at the top of the screen
      */
     public void cancelBooking(EventBooking event){
-
-        // insert code here
+        String ID = event.getClientID();
+        String venue = event.getVenue();
+        String name = event.getEventName();
+        String type =  event.getEventType();
+        String date = event.getEventDate();
+        int start = event.getStartTime();
+        int end = event.getEndTime();
+        double fee = event.getBookingFee();
+        boolean feePaid = event.isFeePaid();
+        boolean privateEvent = event.isPrivateEvent();
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+            Statement statement = conn.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
+                    "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
+                    "feePaid INTEGER)");
+            // search event database for client ID
+            ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
+            if (rs.getString("clientID").equals(ID)){
+                if(rs.getString("name").equals(name)){
+                    statement.execute("DELETE FROM events WHERE(name, type, clientID,  privateEvent, date, start, end, fee, feePaid)" +
+                            "VALUES ('"+name+"', '"+type+"', '"+ID+"', '"+privateEvent
+                            +"', '"+date+"', '"+start+"', '" +end+"', '"+fee+"', '"+feePaid+ "')");
+                }
+                else
+                    //event doesn't exist
+            }
+            statement.close();
+            conn.close();
+        } catch (SQLException e){
+            System.out.println("Something went wrong: " + e.getMessage());
 
     }
 }
