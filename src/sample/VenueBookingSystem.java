@@ -58,6 +58,8 @@ public class VenueBookingSystem extends Application {
      * Runs when user clicks the 'Login' button.
      * Checks if Client ID is in the database -- if found, checks if password matches.
      * If not found, or password is incorrect, shows error message.
+     *
+     * THIS IS DONE!!!
      */
     @FXML
     private void handleLogin(ActionEvent event) {
@@ -79,7 +81,7 @@ public class VenueBookingSystem extends Application {
                         // load client details from database and store in client object
                         client = new Client(rs.getString("id"), rs.getString("password"),
                                 rs.getString("firstName"), rs.getString("lastName"),
-                                rs.getDouble("phone"), rs.getString("email"));
+                                rs.getLong("phone"), rs.getString("email"));
                         // this part displays the client's name at top of screen
                         clientIDLabel.setText("Client: "+client.getFirstName()+" "+client.getLastName());
                         loginSuccess = true; // stop searching
@@ -99,6 +101,8 @@ public class VenueBookingSystem extends Application {
      * METHOD: handleNewUser
      * Runs when user clicks the 'New User' button.
      * Shows the registration screen.
+     *
+     * THIS IS DONE!!!
      */
     @FXML
     private void handleNewUser(ActionEvent event) {
@@ -111,6 +115,8 @@ public class VenueBookingSystem extends Application {
      * Runs when user clicks the 'Register New User' button.
      * Instantiates a client with the input data. Shows error message if data is invalid.
      * Else, adds the new client to the database and allows them into the system.
+     *
+     * THIS IS DONE!!!
      */
     @FXML
     private void handleReg(ActionEvent event) {
@@ -264,9 +270,10 @@ public class VenueBookingSystem extends Application {
     /**
      * METHOD: handleLogOut
      * Runs when user clicks the 'Log Out' button.
+     * Re-initializes the client, clears login fields, and resets default visibilities.
      *
-     * Note: Very simple -- hide all panes except for the login pane.
-     * Maybe clear the client data (set all fields to null values).
+     * THIS IS DONE!!!
+     *
      */
     @FXML
     private void handleLogOut(ActionEvent event) {

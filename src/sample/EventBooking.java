@@ -3,6 +3,8 @@ package sample;
 /**
  * EVENT BOOKING CLASS
  * This file contains the EventBooking class -- used to create objects containing event info
+ *
+ * METHODS: none
  */
 
 public class EventBooking {

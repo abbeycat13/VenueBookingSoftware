@@ -7,6 +7,7 @@ import javafx.scene.*;
 /**
  * CLIENT CLASS
  * This file contains the Client class, and methods to control the client's event bookings.
+ *
  * METHODS: addToDatabase, bookEvent, cancelBooking, viewBookings
  */
 
@@ -16,7 +17,7 @@ public class Client {
     private String password;
     private String firstName;
     private String lastName;
-    private Double phoneNumber; // this should be a Long (not Double) -- to be fixed
+    private Long phoneNumber;
     private String emailAddress;
 
     /**
@@ -28,7 +29,7 @@ public class Client {
     /**
      *  CONSTRUCTOR
      */
-    public Client(String id, String password, String firstName, String lastName, Double phoneNumber,
+    public Client(String id, String password, String firstName, String lastName, Long phoneNumber,
                   String emailAddress) {
         this.id = id;
         this.password = password;
@@ -121,7 +122,7 @@ public class Client {
     /**
      * GET PHONE NUMBER
      */
-    public Double getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -132,17 +133,17 @@ public class Client {
      */
     public void setPhoneNumber(String input) {
         String digits = "";
-        Double phoneNumber = 0.0;
+        Long phoneNum = 0L;
         for (int i = 0; i < input.length(); ++i)
         {
             if (Character.isDigit(input.charAt(i)))
                 digits += input.charAt(i);
         }
-        phoneNumber = phoneNumber.parseDouble(digits);
-        if (phoneNumber < 10000000000.0 && phoneNumber > 999999999.0)
-            this.phoneNumber = phoneNumber;
+        phoneNum = phoneNum.parseLong(digits);
+        if (phoneNum < 10000000000L && phoneNum > 999999999L)
+            this.phoneNumber = phoneNum;
         else
-            this.phoneNumber = 0.0;
+            this.phoneNumber = 0L;
     }
 
     /**
@@ -220,9 +221,11 @@ public class Client {
      * DESCRIPTION: Searches database for all of a client's bookings and stores them in an ArrayList.
      * Should be called when user clicks the 'View Bookings' button.
      * RETURNS: ArrayList of EventBookings
+     *
+     * THIS IS DONE!!!
      */
     public ArrayList<EventBooking> viewBookings(){
-        ArrayList<EventBooking> clientBookings = new ArrayList<EventBooking>();
+        ArrayList<EventBooking> clientBookings = new ArrayList<>();
         try{
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
