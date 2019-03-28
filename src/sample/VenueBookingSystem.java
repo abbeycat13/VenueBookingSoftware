@@ -52,6 +52,7 @@ public class VenueBookingSystem extends Application {
     @FXML
     ScrollPane viewBookingsPane;
 
+
     /**
      * METHOD: handleLogin
      * Runs when user clicks the 'Login' button.
@@ -79,7 +80,8 @@ public class VenueBookingSystem extends Application {
                         client = new Client(rs.getString("id"), rs.getString("password"),
                                 rs.getString("firstName"), rs.getString("lastName"),
                                 rs.getDouble("phone"), rs.getString("email"));
-                        clientIDLabel.setText(clientIDLabel.getText()+client.getFirstName()+" "+client.getLastName());
+                        // this part displays the client's name at top of screen
+                        clientIDLabel.setText("Client: "+client.getFirstName()+" "+client.getLastName());
                         loginSuccess = true; // stop searching
                     }
             }
@@ -129,7 +131,7 @@ public class VenueBookingSystem extends Application {
             client.addToDatabase(); // add new client to database
             registerPane.setVisible(false); // hide register pane
             mainPane.setVisible(true); // show main screen
-            clientIDLabel.setText(clientIDLabel.getText()+client.getFirstName()+" "+client.getLastName());
+            clientIDLabel.setText("Client: "+client.getFirstName()+" "+client.getLastName());
         }
     }
 
@@ -268,13 +270,9 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleLogOut(ActionEvent event) {
-        client.setId(null);
-        client.setPassword(null);
-        client.setFirstName(null);
-        client.setLastName(null);
-        client.setPhoneNumber(null);
-        client.setEmailAddress(null);
-        viewBookingsPane.setVisible(false);
+        Client client = new Client();
+        passwordField.setText(null);
+        clientIDField.setText(null);
         mainPane.setVisible(false);
         loginPane.setVisible(true);
     }

@@ -25,7 +25,7 @@
    <children>
       <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Pane fx:id="loginPane" layoutX="40.0" layoutY="80.0" prefHeight="300.0" prefWidth="400.0" visible="false">
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="80.0" prefHeight="300.0" prefWidth="400.0" visible="true">
                <children>
                   <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
                   <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
@@ -63,7 +63,7 @@
                   <Label fx:id="msgText" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
                </children>
             </Pane>
-            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0">
+            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0" visible="false">
                <children>
                   <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="42.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0">
                      <children>
@@ -77,7 +77,6 @@
                   <ScrollPane fx:id="viewBookingsPane" layoutX="14.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0">
                      <content>
                         <VBox fx:id="bookingVBox" alignment="TOP_CENTER" prefHeight="460.0" prefWidth="440.0" spacing="20.0" visible="false" />
-                         <VBox fx:id="bookEventVBox" alignment="TOP_CENTER" prefHeight="460.0" prefWidth="440.0" spacing="20.0" visible="false" />
                      </content>
                   </ScrollPane>
                   <HBox alignment="BOTTOM_RIGHT" layoutX="14.0" layoutY="515.0" prefHeight="38.0" prefWidth="455.0" spacing="10.0">

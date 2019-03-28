@@ -339,13 +339,14 @@ public class Client {
                             "VALUES ('"+name+"', '"+type+"', '"+ID+"', '"+privateEvent
                             +"', '"+date+"', '"+start+"', '" +end+"', '"+fee+"', '"+feePaid+ "')");
                 }
-                else
-                    //event doesn't exist
+                // else
+                    // event doesn't exist
             }
             statement.close();
             conn.close();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Something went wrong: " + e.getMessage());
+        }
 
     }
 }
