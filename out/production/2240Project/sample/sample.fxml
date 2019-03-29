@@ -25,7 +25,7 @@
    <children>
       <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Pane fx:id="loginPane" layoutX="40.0" layoutY="80.0" prefHeight="300.0" prefWidth="400.0" visible="true">
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0">
                <children>
                   <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
                   <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
@@ -74,7 +74,7 @@
                      </children>
                   </HBox>
                   <Label fx:id="clientIDLabel" layoutX="14.0" layoutY="14.0" text="Client: " />
-                  <ScrollPane fx:id="viewBookingsPane" layoutX="14.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0">
+                  <ScrollPane fx:id="viewBookingsPane" layoutX="14.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0" visible="false">
                      <content>
                         <VBox fx:id="bookingVBox" alignment="TOP_CENTER" prefHeight="460.0" prefWidth="440.0" spacing="20.0" visible="false" />
                      </content>
@@ -85,6 +85,19 @@
                         <Button fx:id="btLogOut" mnemonicParsing="false" onAction="#handleLogOut" text="Log Out" />
                      </children>
                   </HBox>
+                  <ScrollPane fx:id="bookEventPane" layoutX="13.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0" visible="false">
+                     <content>
+                        <VBox prefHeight="430.0" prefWidth="450.0" spacing="10.0">
+                           <children>
+                              <Label text="Select a venue:" />
+                              <VBox fx:id="venuesVBox" prefHeight="100.0" prefWidth="100.0" />
+                              <ChoiceBox fx:id="venueChoice" prefWidth="150.0" />
+                              <Label text="Select date:" />
+                              <DatePicker fx:id="dateChoice" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
                </children>
             </Pane>
          </children>

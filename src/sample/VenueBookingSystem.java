@@ -149,49 +149,22 @@ public class VenueBookingSystem extends Application {
      * Open sample.fxml in Scene Builder to set this up.
      * Then should probably instantiate EventBooking object from data and pass to
      * client.bookEvent method
+     *
+     * Note: users should not be able to book two events with the same name --
+     * this could cause errors in other parts of the software, so there should
+     * be some method to prevent it.
      */
     @FXML
     private void handleBookEvent(ActionEvent event) {
+
+        // show event booking pane
+
+        // get venues and display them
+
+
+        // move these next to lines to a separate method that will be called when
+        // user clicks a submit button at the end of the page
         EventBooking eventBooking = new EventBooking();
-        client = new Client();
-        Venue venue = new Venue();
-        bookingsPane.setVisible(true);
-        int start, end, date;
-        Button yes = new Button("Yes");
-        Button no = new Button("No");
-        TextField name = new TextField();
-        TextField type = new TextField();
-        TextField startField = new TextField();
-        TextField endField = new TextField();
-        TextField addressField = new TextField();
-        TextField cityField = new TextField();
-        TextField capField = new TextField();
-        TextField dateField = new TextField();
-        Label paidLbl = new Label("Have you paid for this event?");
-        Label privateLbl = new Label("Is this a private event?");
-        date = Integer.parseInt(dateField.getText());
-        start = Integer.parseInt(startField.getText());
-        end = Integer.parseInt(endField.getText());
-        eventBooking.setEventName(name.getText());
-        eventBooking.setEventType(type.getText());
-        eventBooking.setEventDate(Integer.toString(date));
-        eventBooking.setStartTime(start);
-        eventBooking.setEndTime(end);
-        if (yes.isPressed())
-            eventBooking.setFeePaid(true);
-        else if (no.isPressed())
-            eventBooking.setFeePaid(false);
-        if (yes.isPressed()) {
-            eventBooking.setPrivateEvent(true);
-            privateLbl.setText("You re booking a private event.");
-        }
-        else if (no.isPressed()) {
-            eventBooking.setPrivateEvent(false);
-            privateLbl.setText("You're booking a public event.");
-        }
-        venue.setAddress(addressField.getText());
-        venue.setCity(cityField.getText());
-        venue.setCapacity(Integer.parseInt(capField.getText()));
         client.bookEvent(eventBooking);
     }
 
@@ -217,34 +190,13 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleViewBookings(ActionEvent event) {
-        if (!bookingVBox.isVisible()) {
+        if (!viewBookingsPane.isVisible()) {
+            viewBookingsPane.setVisible(true);
             bookingVBox.setVisible(true);
-
-            /**
-             * Note: probably want to move the rest of this method to its own method within the
-             * client class, as the same code will probably be used for the 'Cancel Booking' button.
-             * In that case, probably need to pass VBox as parameter.
-             */
-
             // get client's bookings and store in array list
             ArrayList<EventBooking>clientBookings = client.viewBookings();
             // display data in array list
-            for (EventBooking eventBooking : clientBookings) {
-                Label dateLabel = new Label(eventBooking.getEventDate());
-                Label nameLabel = new Label(eventBooking.getEventName());
-                if (eventBooking.isPrivateEvent())
-                    nameLabel.setText(nameLabel.getText() + " (private event)");
-                Label timeLabel = new Label(eventBooking.getStartTime() + " - " + eventBooking.getEndTime());
-                Label venueLabel = new Label(eventBooking.getVenue());
-                Label feeLabel = new Label("Booking Fee: "+
-                        NumberFormat.getCurrencyInstance().format(eventBooking.getBookingFee())+ " Paid? ");
-                if (eventBooking.isFeePaid())
-                    feeLabel.setText(feeLabel.getText() + "Y");
-                else
-                    feeLabel.setText(feeLabel.getText() + "N");
-                Separator separator = new Separator();
-                bookingVBox.getChildren().addAll(dateLabel, nameLabel, timeLabel, venueLabel, feeLabel, separator);
-            }
+            displayEvents(clientBookings, bookingVBox);
         }
     }
 
@@ -266,6 +218,31 @@ public class VenueBookingSystem extends Application {
         Label venueLabel = new Label(eventBooking.getVenue());
 
     }
+
+    /**
+     * METHOD: displayEvents
+     * @param events - ArrayList of EventBookings to be displayed
+     * @param eventVBox - the vBox to display them in
+     */
+    private void displayEvents(ArrayList<EventBooking> events, VBox eventVBox){
+        for (EventBooking eventBooking : events) {
+            Label dateLabel = new Label(eventBooking.getEventDate());
+            Label nameLabel = new Label(eventBooking.getEventName());
+            if (eventBooking.isPrivateEvent())
+                nameLabel.setText(nameLabel.getText() + " (private event)");
+            Label timeLabel = new Label(eventBooking.getStartTime() + " - " + eventBooking.getEndTime());
+            Label venueLabel = new Label(eventBooking.getVenue());
+            Label feeLabel = new Label("Booking Fee: "+
+                    NumberFormat.getCurrencyInstance().format(eventBooking.getBookingFee())+ " Paid? ");
+            if (eventBooking.isFeePaid())
+                feeLabel.setText(feeLabel.getText() + "Y");
+            else
+                feeLabel.setText(feeLabel.getText() + "N");
+            Separator separator = new Separator();
+            eventVBox.getChildren().addAll(dateLabel, nameLabel, timeLabel, venueLabel, feeLabel, separator);
+        }
+    }
+
 
     /**
      * METHOD: handleLogOut
@@ -291,6 +268,9 @@ public class VenueBookingSystem extends Application {
      * Note: Should show a form that allows the user to update their password,
      * phone number, and/or email address. Use the client class setters, and
      * call the addToDatabase method.
+     *
+     * Note: this just displays the form. Need a separate method associated
+     * with a submit button to actually update the info.
      */
     @FXML
     private void handleUpdateInfo(ActionEvent event) {

@@ -1,10 +1,12 @@
 package sample;
 
+import java.util.ArrayList;
+
 /**
  * EVENT BOOKING CLASS
  * This file contains the EventBooking class -- used to create objects containing event info
  *
- * METHODS: none
+ * METHODS: getAllEvents
  */
 
 public class EventBooking {
@@ -14,7 +16,7 @@ public class EventBooking {
     private String venue;
     private boolean isPrivateEvent;
     private String eventDate; // year-month-day format (2019-12-01 = Dec 1, 2019)
-    private int startTime;
+    private int startTime; // maybe start/end times can be strings?
     private int endTime;
     private Double bookingFee;
     private boolean feePaid;
@@ -121,4 +123,17 @@ public class EventBooking {
     public void setFeePaid(boolean feePaid) {
         this.feePaid = feePaid;
     }
+
+    /**
+     * METHOD: getAllEvents
+     * RETURNS: ArrayList of EventBookings containing all the events in database
+     */
+    public static ArrayList<EventBooking> getAllEvents(){
+        ArrayList<EventBooking> allEvents = new ArrayList<>();
+
+        // insert code here
+
+        return allEvents;
+    }
+
 }

@@ -286,16 +286,19 @@ public class Client {
             statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
                     "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
                     "feePaid INTEGER)");
-            // search event database for client ID
+            // search event database for selected venue
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
-            if (rs.getString("Venue").equals(venue)){
-                if(rs.getString("Date").equals(date)){
-                    //Label bookingFailed = new Label("This date is already booked.");
+            // for each event in database, check if venue matches selected venue
+            // if it does, check if date matches selected date (i.e. there is a booking conflict)
+            while (rs.next()) {
+                if (rs.getString("Venue").equals(venue)) {
+                    if (rs.getString("Date").equals(date)) {
+                        //Label bookingFailed = new Label("This date is already booked.");
+                    } else
+                        statement.execute("INSERT INTO events (name, type, clientID,  privateEvent, date, start, end, fee, feePaid)" +
+                                "VALUES ('" + name + "', '" + type + "', '" + ID + "', '" + privateEvent
+                                + "', '" + date + "', '" + start + "', '" + end + "', '" + fee + "', '" + feePaid + "')");
                 }
-                else
-                    statement.execute("INSERT INTO events (name, type, clientID,  privateEvent, date, start, end, fee, feePaid)" +
-                            "VALUES ('"+name+"', '"+type+"', '"+ID+"', '"+privateEvent
-                            +"', '"+date+"', '"+start+"', '" +end+"', '"+fee+"', '"+feePaid+ "')");
             }
             statement.close();
             conn.close();
@@ -318,16 +321,6 @@ public class Client {
      * they press the 'Cancel Booking' button at the top of the screen
      */
     public void cancelBooking(EventBooking event){
-        String ID = event.getClientID();
-        String venue = event.getVenue();
-        String name = event.getEventName();
-        String type =  event.getEventType();
-        String date = event.getEventDate();
-        int start = event.getStartTime();
-        int end = event.getEndTime();
-        double fee = event.getBookingFee();
-        boolean feePaid = event.isFeePaid();
-        boolean privateEvent = event.isPrivateEvent();
         try{
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
@@ -335,15 +328,17 @@ public class Client {
                     "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
                     "feePaid INTEGER)");
             // search event database for client ID
+            // then check if event name matches the event they want to cancel
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
-            if (rs.getString("clientID").equals(ID)){
-                if(rs.getString("name").equals(name)){
-                    statement.execute("DELETE FROM events WHERE(name, type, clientID,  privateEvent, date, start, end, fee, feePaid)" +
-                            "VALUES ('"+name+"', '"+type+"', '"+ID+"', '"+privateEvent
-                            +"', '"+date+"', '"+start+"', '" +end+"', '"+fee+"', '"+feePaid+ "')");
-                }
-                // else
+            while (rs.next()) {
+                if (rs.getString("clientID").equals(event.getClientID())) {
+                    if (rs.getString("name").equals(event.getEventName())) {
+                        statement.execute("DELETE FROM events WHERE(name, clientID) VALUES ('"
+                                + event.getEventName() + "', '" + "', '" + event.getClientID() + "')");
+                    }
+                    // else
                     // event doesn't exist
+                }
             }
             statement.close();
             conn.close();

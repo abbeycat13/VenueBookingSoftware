@@ -1,8 +1,12 @@
 package sample;
 
+import java.util.ArrayList;
+
 /**
  * VENUE CLASS
  * This file contains the Venue class -- used to create objects containing venue info
+ *
+ * METHODS: getAllVenues
  */
 
 public class Venue {
@@ -10,7 +14,7 @@ public class Venue {
     private String address;
     private String city;
     private int capacity;
-    private Long phoneNum;
+    private Long phoneNum; // probably don't need this
 
     /**
      * no arg constructor
@@ -84,8 +88,15 @@ public class Venue {
         this.phoneNum = phoneNum;
     }
 
+    /**
+     * METHOD: getAllVenues
+     * RETURNS: ArrayList of Venues containing all the venues in database
+     */
+    public static ArrayList<Venue> getAllVenues(){
+        ArrayList<Venue> allVenues = new ArrayList<>();
 
-    private void viewAllEvents(){
+        // insert code here
 
+        return allVenues;
     }
 }
