@@ -96,6 +96,7 @@ public class Venue {
         ArrayList<Venue> allVenues = new ArrayList<>();
 
         // insert code here
+        // search database for all venues and add data to array list
 
         return allVenues;
     }

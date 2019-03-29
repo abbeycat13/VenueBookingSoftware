@@ -132,6 +132,8 @@ public class EventBooking {
         ArrayList<EventBooking> allEvents = new ArrayList<>();
 
         // insert code here
+        // search database for all events and add data to array list
+        // basically the same as the viewBookings method in Client class without the if statement
 
         return allEvents;
     }

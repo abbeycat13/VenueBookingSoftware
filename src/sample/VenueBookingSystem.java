@@ -178,8 +178,12 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleCancelBooking(ActionEvent event) {
-        client.viewBookings();
-        //client.cancelBooking();
+        ArrayList<EventBooking> clientBookings = client.viewBookings();
+        // need to create a pane and vBox in Scene Builder, then call the display events method.
+        // displayEvents(clientBookings, VBOX_GOES_HERE);
+
+        // then need a separate method to handle a submit button after user chooses the event
+        // they want to cancel
 
     }
 
@@ -203,20 +207,13 @@ public class VenueBookingSystem extends Application {
     /**
      * METHOD: handleEventCal
      * Runs when user clicks the 'Event Calendar' button.
-     *
-     * Note: This method should show a drop-down menu of venues, then when a venue is selected,
-     * display all the events at that particular venue.
-     * OR... This method can simply display all the events in the database.
      */
     @FXML
     private void handleEventCal(ActionEvent event) {
-        EventBooking eventBooking = new EventBooking();
-        bookingVBox.setVisible(true);
-        Label dateLabel = new Label(eventBooking.getEventDate());
-        Label nameLabel = new Label(eventBooking.getEventName());
-        Label timeLabel = new Label(eventBooking.getStartTime() + " - " + eventBooking.getEndTime());
-        Label venueLabel = new Label(eventBooking.getVenue());
-
+        ArrayList<EventBooking> allEvents = EventBooking.getAllEvents();
+        // need to create a pane and vBox in Scene Builder, then call the display events method.
+        // THAT IS ALL FOR THIS METHOD!! :)
+        // displayEvents(allEvents, VBOX_GOES_HERE);
     }
 
     /**
