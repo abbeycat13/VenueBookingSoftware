@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
+import javax.swing.*;
 import javax.xml.soap.Text;
 
 
@@ -40,17 +41,25 @@ public class VenueBookingSystem extends Application {
      * Note: UI elements need to be declared here in order to be referenced in code
      */
     @FXML
-    TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField, newEmailField;
+    TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField, newEmailField,eventNameField;
     @FXML
     PasswordField passwordField, newPassField;
     @FXML
     Label msgText, clientIDLabel;
     @FXML
-    VBox bookingVBox;
+    VBox bookingVBox,eventCalendarVBox,bookEventVBox;
     @FXML
-    Pane loginPane, registerPane, mainPane, bookingsPane;
+    Pane loginPane, registerPane, mainPane;
     @FXML
-    ScrollPane viewBookingsPane;
+    ScrollPane viewBookingsPane,bookEventPane,cancelBookingPane,eventCalendarPane;
+    @FXML
+    MenuButton startTimeField,endTimeField,submitField,bookingCancelSelection,venueChoice;
+    @FXML
+    DatePicker dateChoice;
+    @FXML
+    RadioButton privateEventRadioButton;
+
+
 
 
     /**
@@ -164,8 +173,22 @@ public class VenueBookingSystem extends Application {
 
         // move these next to lines to a separate method that will be called when
         // user clicks a submit button at the end of the page
+
+    }
+
+    private void handleSubmitEventBooking(ActionEvent event){
+
         EventBooking eventBooking = new EventBooking();
+        eventBooking.setEventName(eventNameField.getText());
+        eventBooking.setVenue(venueChoice.getText());
+        eventBooking.setStartTime(startTimeField.getText());
+        eventBooking.setEndTime(endTimeField.getText());
+        if(privateEventRadioButton.isFocused())
+            eventBooking.setPrivateEvent(true);
+        else eventBooking.setPrivateEvent(false);
+
         client.bookEvent(eventBooking);
+
     }
 
     /**
@@ -186,6 +209,16 @@ public class VenueBookingSystem extends Application {
         // they want to cancel
 
     }
+
+    @FXML
+    private void handleSubmitCancellation(ActionEvent event){
+
+        EventBooking cancelBooking=new EventBooking();
+        cancelBooking.setEventName(bookingCancelSelection.getText());
+        //get event that user selects and hit submit button,make submit button work//
+        client.cancelBooking(cancelBooking);
+    }
+
 
     /**
      * METHOD: handleViewBookings

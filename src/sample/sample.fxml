@@ -25,7 +25,7 @@
    <children>
       <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0">
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0" visible="false">
                <children>
                   <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
                   <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
@@ -63,7 +63,7 @@
                   <Label fx:id="msgText" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
                </children>
             </Pane>
-            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0" visible="false">
+            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0">
                <children>
                   <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="42.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0">
                      <children>
@@ -85,17 +85,89 @@
                         <Button fx:id="btLogOut" mnemonicParsing="false" onAction="#handleLogOut" text="Log Out" />
                      </children>
                   </HBox>
-                  <ScrollPane fx:id="bookEventPane" layoutX="13.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0" visible="false">
+                  <ScrollPane fx:id="bookEventPane" layoutX="13.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0">
                      <content>
-                        <VBox prefHeight="430.0" prefWidth="450.0" spacing="10.0">
+                        <VBox fx:id="bookEventVBox" prefHeight="430.0" prefWidth="450.0" spacing="10.0">
                            <children>
                               <Label text="Select a venue:" />
                               <VBox fx:id="venuesVBox" prefHeight="100.0" prefWidth="100.0" />
-                              <ChoiceBox fx:id="venueChoice" prefWidth="150.0" />
+                              <MenuButton fx:id="venueChoice" mnemonicParsing="false" text="Select Venue">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="Action 1" />
+                                  <MenuItem mnemonicParsing="false" text="Action 2" />
+                                </items>
+                              </MenuButton>
                               <Label text="Select date:" />
                               <DatePicker fx:id="dateChoice" />
+                              <MenuButton fx:id="startTimeField" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" text="Start Time ">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="7:00AM" />
+                                  <MenuItem mnemonicParsing="false" text="8:00AM" />
+                                    <MenuItem mnemonicParsing="false" text="9:00AM" />
+                                    <MenuItem mnemonicParsing="false" text="10:00AM" />
+                                    <MenuItem mnemonicParsing="false" text="11:00AM" />
+                                    <MenuItem mnemonicParsing="false" text="12:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="1:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="2:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="3:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="4:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="5:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="6:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="7:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="8:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="9:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="10:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="11:00PM" />
+                                </items>
+                              </MenuButton>
+                              <MenuButton fx:id="endTimeField" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" text="End Time">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="8:00AM" />
+                                  <MenuItem mnemonicParsing="false" text="9:00AM" />
+                                    <MenuItem mnemonicParsing="false" text="10:00AM" />
+                                    <MenuItem mnemonicParsing="false" text="11:00AM" />
+                                    <MenuItem mnemonicParsing="false" text="12:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="1:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="2:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="3:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="4:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="5:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="6:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="7:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="8:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="9:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="10:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="11:00PM" />
+                                    <MenuItem mnemonicParsing="false" text="12:00AM" />
+                                </items>
+                              </MenuButton>
+                              <Label text="Event Name:" />
+                              <TextField fx:id="eventNameField" prefHeight="32.0" prefWidth="450.0" />
+                              <RadioButton fx:id="privateEventRadioButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="105.0" text="Private Event" />
+                              <Button fx:id="submitField" mnemonicParsing="false" onAction="#handleSubmitEventBooking" prefHeight="25.0" prefWidth="80.0" text="Submit" />
                            </children>
                         </VBox>
+                     </content>
+                  </ScrollPane>
+                  <ScrollPane fx:id="cancelBookingPane" layoutX="13.0" layoutY="86.0" prefHeight="435.0" prefWidth="455.0" visible="false">
+                     <content>
+                        <VBox fx:id="eventCancellation" prefHeight="430.0" prefWidth="450.0">
+                           <children>
+                              <VBox prefHeight="100.0" prefWidth="100.0" />
+                              <MenuButton fx:id="bookingCancelSelection" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Cancel">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="Action 1" />
+                                  <MenuItem mnemonicParsing="false" text="Action 2" />
+                                </items>
+                              </MenuButton>
+                              <Button fx:id="submitCancellation" mnemonicParsing="false" onAction="#handleSubmitCancellation" text="Submit" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+                  <ScrollPane fx:id="eventCalendarPane" layoutX="17.0" layoutY="79.0" prefHeight="430.0" prefWidth="450.0" visible="false">
+                     <content>
+                        <VBox fx:id="eventCalendarVBox" prefHeight="200.0" prefWidth="450.0" />
                      </content>
                   </ScrollPane>
                </children>

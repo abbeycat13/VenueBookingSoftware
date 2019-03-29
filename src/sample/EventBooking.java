@@ -16,8 +16,8 @@ public class EventBooking {
     private String venue;
     private boolean isPrivateEvent;
     private String eventDate; // year-month-day format (2019-12-01 = Dec 1, 2019)
-    private int startTime; // maybe start/end times can be strings?
-    private int endTime;
+    private String startTime; // maybe start/end times can be strings?
+    private String endTime;
     private Double bookingFee;
     private boolean feePaid;
 
@@ -92,19 +92,19 @@ public class EventBooking {
         this.eventDate = eventDate;
     }
 
-    public int getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
