@@ -1,5 +1,9 @@
 package sample;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -11,9 +15,10 @@ import java.util.ArrayList;
 
 public class Venue {
 
+    private String name;
     private String address;
     private String city;
-    private int capacity;
+    private Integer capacity;
     private Long phoneNum; // probably don't need this
 
     /**
@@ -25,11 +30,26 @@ public class Venue {
     /**
      * constructor
      */
-    public Venue(String address, String city, int capacity, Long phoneNum) {
+    public Venue(String name, String address, String city, Integer capacity, Long phoneNum) {
+        this.name = name;
         this.address = address;
         this.city = city;
         this.capacity = capacity;
         this.phoneNum = phoneNum;
+    }
+
+    /**
+     * GET name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * SET name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -63,14 +83,14 @@ public class Venue {
     /**
      * GET CAPACITY
      */
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
 
     /**
      * SET CAPACITY
      */
-    public void setCapacity(int capacity) {
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 
@@ -94,10 +114,21 @@ public class Venue {
      */
     public static ArrayList<Venue> getAllVenues(){
         ArrayList<Venue> allVenues = new ArrayList<>();
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+            Statement statement = conn.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS venues (name TEXT, address TEXT, city TEXT, " +
+                    "phone INTEGER, capacity INTEGER");
 
-        // insert code here
-        // search database for all venues and add data to array list
+            // TO DO !!
+            // search database for all venues and add data to array list
 
+
+            statement.close();
+            conn.close();
+        } catch (SQLException e){
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
         return allVenues;
     }
 }

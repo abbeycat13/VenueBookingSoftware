@@ -41,23 +41,25 @@ public class VenueBookingSystem extends Application {
      * Note: UI elements need to be declared here in order to be referenced in code
      */
     @FXML
-    TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField, newEmailField,eventNameField;
+    TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField, newEmailField, eventNameField;
     @FXML
     PasswordField passwordField, newPassField;
     @FXML
-    Label msgText, clientIDLabel;
+    Label msgText, clientIDLabel, eventBookingSuccess, cancelSuccessLabel;
     @FXML
-    VBox bookingVBox,eventCalendarVBox,bookEventVBox;
+    VBox bookingVBox, venuesVBox, cancelBookingVBox, eventCalendarVBox;
     @FXML
     Pane loginPane, registerPane, mainPane;
     @FXML
-    ScrollPane viewBookingsPane,bookEventPane,cancelBookingPane,eventCalendarPane;
+    ScrollPane viewBookingsPane, bookEventPane, cancelBookingPane, eventCalendarPane;
     @FXML
-    MenuButton startTimeField,endTimeField,submitField,bookingCancelSelection,venueChoice;
+    MenuButton startTimeField, endTimeField, bookingCancelSelection, venueChoice, eventTypeChoice;
     @FXML
     DatePicker dateChoice;
     @FXML
     RadioButton privateEventRadioButton;
+    @FXML
+    Button calcFeeButton, btBook, btCancel, btView, btCal;
 
 
 
@@ -106,21 +108,119 @@ public class VenueBookingSystem extends Application {
         }
     }
 
-    /**
-     * METHOD: handleNewUser
-     * Runs when user clicks the 'New User' button.
-     * Shows the registration screen.
-     *
-     * THIS IS DONE!!!
-     */
     @FXML
-    private void handleNewUser(ActionEvent event) {
-        loginPane.setVisible(false); // hide login screen
-        registerPane.setVisible(true); // show register screen
+    private void handleButtonClick(ActionEvent event){
+        Button button = (Button) event.getSource();
+        switch (button.getText()){
+            case "New User": // show new user registration screen
+            {
+                loginPane.setVisible(false); // hide login screen
+                registerPane.setVisible(true); // show register screen
+                break;
+            }
+            case "Book Event":
+            {
+                screenChange();
+                bookEventPane.setVisible(true);
+                // get all venue options and display them
+                for (Venue venue : Venue.getAllVenues()) {
+                    Label nameLabel = new Label(venue.getName());
+                    Label addressLabel = new Label(venue.getAddress()+" "+venue.getCity()+" Phone: "+venue.getPhoneNum());
+                    Label capacityLabel = new Label("Capacity: "+venue.getCapacity().toString());
+                    Separator separator = new Separator();
+                    venuesVBox.getChildren().addAll(nameLabel, addressLabel, capacityLabel, separator);
+                }
+                // also display names in drop-down menu
+                break;
+            }
+            case "Cancel Booking":
+            {
+                screenChange();
+                cancelBookingPane.setVisible(true);
+                // get client's bookings and display them
+                displayEvents(client.getBookings(), cancelBookingVBox);
+                // add each event's name and date to drop-down menu
+                for (EventBooking eventBooking : client.getBookings()) {
+                    MenuItem cancelSelection = new MenuItem(eventBooking.toString());
+                    bookingCancelSelection.getItems().add(cancelSelection);
+                }
+                break;
+            }
+            case "View Bookings":
+            {
+                screenChange();
+                viewBookingsPane.setVisible(true);
+                // get client's bookings and display them
+                displayEvents(client.getBookings(), bookingVBox);
+                break;
+            }
+            case "Event Calendar":
+            {
+                screenChange();
+                eventCalendarPane.setVisible(true);
+                // get all events and display them
+                displayEvents(EventBooking.getAllEvents(), eventCalendarVBox);
+                break;
+            }
+            case "Update Contact Info":
+            {
+                screenChange();
+                // TO DO !!
+                // Use Scene Builder to create a new pane (inside the main pain) with 3 text fields for user to update
+                // their password, phone, and/or email. Also need a submit button, which will need a method (already
+                // started -- handleUpdateInfo around Line #360) that does the following:
+                //          1) use setters in the client class to set password, phone, email to values in the text
+                //             fields, but only IF those values are not null AND IF they are valid -- look at the
+                //             handleReg method (Line #228) for how to do this
+                //          2) then call the client.addtodatabase() method to update the database with new info
+                break;
+            }
+            case "Log Out":
+            {
+                Client client = new Client(); // Re-initialize client
+                screenChange();
+                passwordField.setText(null); // clear login fields
+                clientIDField.setText(null);
+                mainPane.setVisible(false); // hide main screen
+                loginPane.setVisible(true); // show login screen
+                break;
+            }
+        }
+    }
+
+    // Headache-saving method.
+    private void screenChange(){
+        // set all screens to non-visible
+        bookEventPane.setVisible(false);
+        viewBookingsPane.setVisible(false);
+        eventCalendarPane.setVisible(false);
+        cancelBookingPane.setVisible(false);
+        // empty all VBoxes
+        bookingVBox.getChildren().clear();
+        cancelBookingVBox.getChildren().clear();
+        venuesVBox.getChildren().clear();
+        eventCalendarVBox.getChildren().clear();
+        // reset all drop-down menus
+        venueChoice.getItems().clear();
+        bookingCancelSelection.getItems().clear();
+        // clear all input fields
+        bookingCancelSelection.setText("Select a Booking to Cancel");
+        venueChoice.setText("Select a venue");
+        startTimeField.setText("Start Time");
+        endTimeField.setText("End Time");
+        eventNameField.setText(null);
+        dateChoice.setValue(null);
+        eventTypeChoice.setText("Select Event Type");
+        privateEventRadioButton.setSelected(false);
+        calcFeeButton.setText("Calculate Fee: ");
+        // clear all labels
+        eventBookingSuccess.setText(null);
+        cancelSuccessLabel.setText(null);
     }
 
     /**
-     * METHOD: handleReg
+     * METHOD: handleReg // New User Registration Screen
+     *
      * Runs when user clicks the 'Register New User' button.
      * Instantiates a client with the input data. Shows error message if data is invalid.
      * Else, adds the new client to the database and allows them into the system.
@@ -147,35 +247,61 @@ public class VenueBookingSystem extends Application {
             registerPane.setVisible(false); // hide register pane
             mainPane.setVisible(true); // show main screen
             clientIDLabel.setText("Client: "+client.getFirstName()+" "+client.getLastName());
+            // clear input fields
+            newIDField.setText(null);
+            newPassField.setText(null);
+            newFNField.setText(null);
+            newLNField.setText(null);
+            newPhoneField.setText(null);
+            newEmailField.setText(null);
         }
     }
 
+
     /**
-     * METHOD: handleBookEvent
-     * Runs when user clicks the 'Book Event' button.
+     * THE FOLLOWING METHODS WORK WITH THE 'BOOK EVENT' SCREEN
      *
-     * Note: This method should show a form to collect the event info from the user.
-     * Open sample.fxml in Scene Builder to set this up.
-     * Then should probably instantiate EventBooking object from data and pass to
-     * client.bookEvent method
+     * handleStartTime - sets 'Start Time' field to selection
+     * handleEndTime - sets 'End Time' field to selection
+     * handleEventType - sets 'Event Type' field to selection
+     * handleCalcFee - calculates and displays the booking fee
+     * handleSubmitEventBooking - books the event, or displays an error message
      *
-     * Note: users should not be able to book two events with the same name --
-     * this could cause errors in other parts of the software, so there should
-     * be some method to prevent it.
      */
+
     @FXML
-    private void handleBookEvent(ActionEvent event) {
-
-        // show event booking pane
-
-        // get venues and display them
-
-
-        // move these next to lines to a separate method that will be called when
-        // user clicks a submit button at the end of the page
-
+    private void handleStartTime(ActionEvent event){
+        MenuItem choice = (MenuItem) event.getSource();
+        startTimeField.setText(choice.getText());
     }
-
+    @FXML
+    private void handleEndTime(ActionEvent event){
+        MenuItem choice = (MenuItem) event.getSource();
+        endTimeField.setText(choice.getText());
+    }
+    @FXML
+    private void handleEventType(ActionEvent event){
+        MenuItem choice = (MenuItem) event.getSource();
+        eventTypeChoice.setText(choice.getText());
+    }
+    @FXML
+    private void handleCalcFee(ActionEvent event){
+        EventBooking eventBooking = new EventBooking();
+        Venue eventVenue = new Venue();
+        for (Venue venue : Venue.getAllVenues()) {
+            if (venue.getName().equals(venueChoice.getText()))
+                eventVenue = venue;
+        }
+        if(privateEventRadioButton.isSelected())
+            eventBooking.setPrivateEvent(true);
+        else
+            eventBooking.setPrivateEvent(false);
+        eventBooking.setStartTime(startTimeField.getText());
+        eventBooking.setEndTime(endTimeField.getText());
+        eventBooking.setEventType(eventTypeChoice.getText());
+        calcFeeButton.setText("Calculate Fee: "+ eventBooking.calcFee(eventVenue));
+    }
+    @FXML
     private void handleSubmitEventBooking(ActionEvent event){
 
         EventBooking eventBooking = new EventBooking();
@@ -183,74 +309,67 @@ public class VenueBookingSystem extends Application {
         eventBooking.setVenue(venueChoice.getText());
         eventBooking.setStartTime(startTimeField.getText());
         eventBooking.setEndTime(endTimeField.getText());
-        if(privateEventRadioButton.isFocused())
+        if(privateEventRadioButton.isSelected())
             eventBooking.setPrivateEvent(true);
-        else eventBooking.setPrivateEvent(false);
-
-        client.bookEvent(eventBooking);
-
+        else
+            eventBooking.setPrivateEvent(false);
+        // check if start time is after end time -- if so, event cannot be booked
+        String digits = "";
+        Integer start = 0;
+        Integer end = 0;
+        boolean stpm = false;
+        boolean etpm = false;
+        // this part converts a String to Integer -- removes all non-digit characters before parsing
+        for (int i = 0; i < eventBooking.getStartTime().length(); ++i)
+        {
+            if (Character.isDigit(eventBooking.getStartTime().charAt(i)))
+                digits += eventBooking.getStartTime().charAt(i);
+            else if (eventBooking.getStartTime().charAt(i)=='P')
+                stpm = true;
+        }
+        start = start.parseInt(digits);
+        if (stpm && start >= 100) // don't do this for 12pm
+            start += 1200; // covert to 24 hour format, e.g. 7PM will parse to 700, add 1200 = 1900
+        // do the same for end time
+        digits = "";
+        for (int i = 0; i < eventBooking.getEndTime().length(); ++i)
+        {
+            if (Character.isDigit(eventBooking.getEndTime().charAt(i)))
+                digits += eventBooking.getEndTime().charAt(i);
+            else if (eventBooking.getEndTime().charAt(i)=='P')
+                etpm = true;
+        }
+        end = start.parseInt(digits);
+        if (etpm && end >= 100)
+            end += 1200;
+        // if end time is before or same as start time, unless end time is after 12am, event cannot be booked
+        if ((end <= start) && !(!etpm && (end == 1200 || end < 700)))
+            eventBookingSuccess.setText("This event cannot be booked. Check that your start time is correct.");
+        else
+            eventBookingSuccess.setText(client.bookEvent(eventBooking));
     }
+
 
     /**
-     * METHOD: handleCancelBooking
-     * Runs when user clicks the 'Cancel Booking' button.
-     *
-     * Note: This method should display all of a client's current bookings,
-     * and somehow allow them to indicate which one they want to cancel.
-     * Then call client.cancelBooking to do the actual cancelling.
+     * METHOD: handleSubmitCancellation // 'Cancel Event' Screen
+     * DESCRIPTION: Matches user's selection with a booking in the database,
+     * then calls the cancelBooking method in Client class
      */
-    @FXML
-    private void handleCancelBooking(ActionEvent event) {
-        ArrayList<EventBooking> clientBookings = client.viewBookings();
-        // need to create a pane and vBox in Scene Builder, then call the display events method.
-        // displayEvents(clientBookings, VBOX_GOES_HERE);
-
-        // then need a separate method to handle a submit button after user chooses the event
-        // they want to cancel
-
-    }
-
     @FXML
     private void handleSubmitCancellation(ActionEvent event){
-
-        EventBooking cancelBooking=new EventBooking();
-        cancelBooking.setEventName(bookingCancelSelection.getText());
-        //get event that user selects and hit submit button,make submit button work//
-        client.cancelBooking(cancelBooking);
-    }
-
-
-    /**
-     * METHOD: handleViewBookings
-     * Runs when user clicks the 'View Bookings' button.
-     * Calls the viewBookings method in Client class, then displays the client's current event bookings
-     */
-    @FXML
-    private void handleViewBookings(ActionEvent event) {
-        if (!viewBookingsPane.isVisible()) {
-            viewBookingsPane.setVisible(true);
-            bookingVBox.setVisible(true);
-            // get client's bookings and store in array list
-            ArrayList<EventBooking>clientBookings = client.viewBookings();
-            // display data in array list
-            displayEvents(clientBookings, bookingVBox);
+        EventBooking cancelBooking = new EventBooking();
+        ArrayList<EventBooking> clientBookings = client.getBookings();
+        for (EventBooking booking : clientBookings) {
+            if (bookingCancelSelection.getText().equals(booking.toString()))
+                cancelBooking = booking;
         }
+        cancelSuccessLabel.setText(client.cancelBooking(cancelBooking));
     }
 
-    /**
-     * METHOD: handleEventCal
-     * Runs when user clicks the 'Event Calendar' button.
-     */
-    @FXML
-    private void handleEventCal(ActionEvent event) {
-        ArrayList<EventBooking> allEvents = EventBooking.getAllEvents();
-        // need to create a pane and vBox in Scene Builder, then call the display events method.
-        // THAT IS ALL FOR THIS METHOD!! :)
-        // displayEvents(allEvents, VBOX_GOES_HERE);
-    }
 
     /**
      * METHOD: displayEvents
+     * DESCRIPTION: This method takes a list of event bookings and displays the data in a VBox
      * @param events - ArrayList of EventBookings to be displayed
      * @param eventVBox - the vBox to display them in
      */
@@ -262,56 +381,32 @@ public class VenueBookingSystem extends Application {
                 nameLabel.setText(nameLabel.getText() + " (private event)");
             Label timeLabel = new Label(eventBooking.getStartTime() + " - " + eventBooking.getEndTime());
             Label venueLabel = new Label(eventBooking.getVenue());
-            Label feeLabel = new Label("Booking Fee: "+
-                    NumberFormat.getCurrencyInstance().format(eventBooking.getBookingFee())+ " Paid? ");
-            if (eventBooking.isFeePaid())
-                feeLabel.setText(feeLabel.getText() + "Y");
-            else
-                feeLabel.setText(feeLabel.getText() + "N");
-            Separator separator = new Separator();
-            eventVBox.getChildren().addAll(dateLabel, nameLabel, timeLabel, venueLabel, feeLabel, separator);
+            eventVBox.getChildren().addAll(dateLabel, nameLabel, timeLabel, venueLabel);
+            // only display fee for the current client's bookings
+            if (eventBooking.getClientID() == client.getId()) {
+                Label feeLabel = new Label("Booking Fee: " +
+                        NumberFormat.getCurrencyInstance().format(eventBooking.getBookingFee()) + " Paid? ");
+                if (eventBooking.isFeePaid())
+                    feeLabel.setText(feeLabel.getText() + "Y");
+                else
+                    feeLabel.setText(feeLabel.getText() + "N");
+                eventVBox.getChildren().add(feeLabel);
+            }
+            eventVBox.getChildren().add(new Separator());
         }
-    }
-
-
-    /**
-     * METHOD: handleLogOut
-     * Runs when user clicks the 'Log Out' button.
-     * Re-initializes the client, clears login fields, and resets default visibilities.
-     *
-     * THIS IS DONE!!!
-     *
-     */
-    @FXML
-    private void handleLogOut(ActionEvent event) {
-        Client client = new Client();
-        passwordField.setText(null);
-        clientIDField.setText(null);
-        mainPane.setVisible(false);
-        loginPane.setVisible(true);
     }
 
     /**
      * METHOD: handleUpdateInfo
-     * Runs when user clicks the 'Update Contact Info' button.
      *
-     * Note: Should show a form that allows the user to update their password,
-     * phone number, and/or email address. Use the client class setters, and
-     * call the addToDatabase method.
-     *
-     * Note: this just displays the form. Need a separate method associated
-     * with a submit button to actually update the info.
      */
-    @FXML
-    private void handleUpdateInfo(ActionEvent event) {
-        client.setId(newIDField.getText());
-        client.setPassword(newPassField.getText());
-        client.setFirstName(newFNField.getText());
-        client.setLastName(newLNField.getText());
-        client.setPhoneNumber(newPhoneField.getText());
-        client.setEmailAddress(newEmailField.getText());
-
-    }
+    //@FXML
+    //private void handleUpdateInfo(ActionEvent event) {
+    //    client.setId(FIELDNAME.getText());
+    //    client.setPassword(FIELDNAME.getText());
+    //    client.setPhoneNumber(FIELDNAME.getText());
+    //    client.setEmailAddress(FIELDNAME.getText());
+    //}
 
     public static void main(String[] args) {
         launch(args);

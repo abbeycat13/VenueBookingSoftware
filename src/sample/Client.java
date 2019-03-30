@@ -217,14 +217,14 @@ public class Client {
     }
 
     /**
-     * METHOD: viewBookings
+     * METHOD: getBookings
      * DESCRIPTION: Searches database for all of a client's bookings and stores them in an ArrayList.
      * Should be called when user clicks the 'View Bookings' button.
      * RETURNS: ArrayList of EventBookings
      *
      * THIS IS DONE!!!
      */
-    public ArrayList<EventBooking> viewBookings(){
+    public ArrayList<EventBooking> getBookings(){
         ArrayList<EventBooking> clientBookings = new ArrayList<>();
         try{
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
@@ -247,8 +247,8 @@ public class Client {
                     // instantiate an event from data and add to arraylist
                     clientBookings.add(new EventBooking(rs.getString("name"), rs.getString("type"),
                             rs.getString("clientID"), rs.getString("venue"), privateEvent,
-                            rs.getString("date"), rs.getInt("startTime"),
-                            rs.getInt("endTime"), rs.getDouble("fee"), feePaid));
+                            rs.getString("date"), rs.getString("startTime"),
+                            rs.getString("endTime"), rs.getDouble("fee"), feePaid));
                 }
             }
             statement.close();
@@ -269,14 +269,17 @@ public class Client {
      * Note: call this method after user has filled out form with event details and attempts to book the event,
      * NOT immediately when they press the 'Book Event' button at the top of the screen
      */
-    public void bookEvent(EventBooking event){
+    public String bookEvent(EventBooking event){
+        boolean bookingSuccess = false;
+        boolean venueNotAvailable = false;
+
         String ID = event.getClientID();
         String venue = event.getVenue();
         String name = event.getEventName();
         String type =  event.getEventType();
         String date = event.getEventDate();
-        int start = event.getStartTime();
-        int end = event.getEndTime();
+        String start = event.getStartTime();
+        String end = event.getEndTime();
         double fee = event.getBookingFee();
         boolean feePaid = event.isFeePaid();
         boolean privateEvent = event.isPrivateEvent();
@@ -290,25 +293,35 @@ public class Client {
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
             // for each event in database, check if venue matches selected venue
             // if it does, check if date matches selected date (i.e. there is a booking conflict)
+            // also make sure client does not have a booking with the same name on the same date
+            // (this could cause issues with the cancellation method)
             while (rs.next()) {
-                if (rs.getString("Venue").equals(venue)) {
-                    if (rs.getString("Date").equals(date)) {
-                        //Label bookingFailed = new Label("This date is already booked.");
-                    } else
-                        statement.execute("INSERT INTO events (name, type, clientID,  privateEvent, date, start, end, fee, feePaid)" +
-                                "VALUES ('" + name + "', '" + type + "', '" + ID + "', '" + privateEvent
-                                + "', '" + date + "', '" + start + "', '" + end + "', '" + fee + "', '" + feePaid + "')");
+                if (rs.getString("Venue").equals(venue) && rs.getString("Date").equals(date)) {
+                    bookingSuccess = false;
+                    venueNotAvailable = true;
                 }
+                else if (rs.getString("clientID").equals(ID) && rs.getString("name").equals(name)
+                        && rs.getString("date").equals(date))
+                    bookingSuccess = false;
+                else {
+                    statement.execute("INSERT INTO events (name, type, clientID,  privateEvent, date, start, end, fee, feePaid)" +
+                            "VALUES ('" + name + "', '" + type + "', '" + ID + "', '" + privateEvent
+                            + "', '" + date + "', '" + start + "', '" + end + "', '" + fee + "', '" + feePaid + "')");
+                    bookingSuccess = true;
+                    }
+
             }
             statement.close();
             conn.close();
         } catch (SQLException e){
             System.out.println("Something went wrong: " + e.getMessage());
         }
-
-
-
-
+        if (bookingSuccess)
+            return "Your event has been booked!";
+        else if (venueNotAvailable)
+            return "This venue is not available. Please select a different venue or date.";
+        else
+            return "You cannot book multiple events with the same name and date.";
     }
 
     /**
@@ -320,7 +333,8 @@ public class Client {
      * Note: should be called after user has selected which booking they would like to cancel, NOT immediately when
      * they press the 'Cancel Booking' button at the top of the screen
      */
-    public void cancelBooking(EventBooking event){
+    public String cancelBooking(EventBooking event){
+        boolean cancelSuccess = false;
         try{
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
@@ -333,11 +347,12 @@ public class Client {
             while (rs.next()) {
                 if (rs.getString("clientID").equals(event.getClientID())) {
                     if (rs.getString("name").equals(event.getEventName())) {
-                        statement.execute("DELETE FROM events WHERE(name, clientID) VALUES ('"
-                                + event.getEventName() + "', '" + "', '" + event.getClientID() + "')");
+                        statement.execute("DELETE FROM events WHERE(name, clientID, date) VALUES ('"
+                                +event.getEventName()+ "', '" + "', '" +event.getClientID()+ "', '" +event.getEventDate()+ "')");
+                        cancelSuccess = true;
                     }
-                    // else
-                    // event doesn't exist
+                    else
+                    cancelSuccess = false; // event not found
                 }
             }
             statement.close();
@@ -345,6 +360,9 @@ public class Client {
         } catch (SQLException e) {
             System.out.println("Something went wrong: " + e.getMessage());
         }
-
+        if (cancelSuccess)
+            return "Your booking was successfully cancelled.";
+        else
+            return "ERROR -- this booking could not be found.";
     }
 }

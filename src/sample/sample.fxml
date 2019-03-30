@@ -25,7 +25,7 @@
    <children>
       <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0" visible="false">
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0">
                <children>
                   <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
                   <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
@@ -33,7 +33,7 @@
                   <Label layoutX="67.0" layoutY="128.0" text="Client ID:" />
                   <Label layoutX="145.0" layoutY="89.0" text="Existing User:" />
                   <Button fx:id="btLogin" layoutX="145.0" layoutY="206.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
-                  <Button fx:id="btNewUser" layoutX="229.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleNewUser" text="New User" />
+                  <Button fx:id="btNewUser" layoutX="229.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleButtonClick" text="New User" />
                   <Label fx:id="msgText" layoutX="67.0" layoutY="247.0" prefHeight="17.0" prefWidth="305.0" />
                </children>
             </Pane>
@@ -63,29 +63,29 @@
                   <Label fx:id="msgText" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
                </children>
             </Pane>
-            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0">
+            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0" visible="false">
                <children>
                   <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="42.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0">
                      <children>
-                        <Button fx:id="btBook" mnemonicParsing="false" onAction="#handleBookEvent" text="Book Event" />
-                        <Button fx:id="btCancel" mnemonicParsing="false" onAction="#handleCancelBooking" text="Cancel Booking" />
-                        <Button fx:id="btView" mnemonicParsing="false" onAction="#handleViewBookings" text="View Bookings" />
-                        <Button fx:id="btCal" mnemonicParsing="false" onAction="#handleEventCal" text="Event Calendar" />
+                        <Button fx:id="btBook" mnemonicParsing="false" onAction="#handleButtonClick" text="Book Event" />
+                        <Button fx:id="btCancel" mnemonicParsing="false" onAction="#handleButtonClick" text="Cancel Booking" />
+                        <Button fx:id="btView" mnemonicParsing="false" onAction="#handleButtonClick" text="View Bookings" />
+                        <Button fx:id="btCal" mnemonicParsing="false" onAction="#handleButtonClick" text="Event Calendar" />
                      </children>
                   </HBox>
                   <Label fx:id="clientIDLabel" layoutX="14.0" layoutY="14.0" text="Client: " />
                   <ScrollPane fx:id="viewBookingsPane" layoutX="14.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0" visible="false">
                      <content>
-                        <VBox fx:id="bookingVBox" alignment="TOP_CENTER" prefHeight="460.0" prefWidth="440.0" spacing="20.0" visible="false" />
+                        <VBox fx:id="bookingVBox" alignment="TOP_CENTER" prefHeight="460.0" prefWidth="440.0" spacing="20.0" />
                      </content>
                   </ScrollPane>
                   <HBox alignment="BOTTOM_RIGHT" layoutX="14.0" layoutY="515.0" prefHeight="38.0" prefWidth="455.0" spacing="10.0">
                      <children>
-                        <Button fx:id="btUpdateInfo" mnemonicParsing="false" onAction="#handleUpdateInfo" text="Update Contact Info" />
-                        <Button fx:id="btLogOut" mnemonicParsing="false" onAction="#handleLogOut" text="Log Out" />
+                        <Button fx:id="btUpdateInfo" mnemonicParsing="false" onAction="#handleButtonClick" text="Update Contact Info" />
+                        <Button fx:id="btLogOut" mnemonicParsing="false" onAction="#handleButtonClick" text="Log Out" />
                      </children>
                   </HBox>
-                  <ScrollPane fx:id="bookEventPane" layoutX="13.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0">
+                  <ScrollPane fx:id="bookEventPane" layoutX="13.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0" visible="false">
                      <content>
                         <VBox fx:id="bookEventVBox" prefHeight="430.0" prefWidth="450.0" spacing="10.0">
                            <children>
@@ -98,69 +98,105 @@
                                 </items>
                               </MenuButton>
                               <Label text="Select date:" />
-                              <DatePicker fx:id="dateChoice" />
-                              <MenuButton fx:id="startTimeField" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" text="Start Time ">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="7:00AM" />
-                                  <MenuItem mnemonicParsing="false" text="8:00AM" />
-                                    <MenuItem mnemonicParsing="false" text="9:00AM" />
-                                    <MenuItem mnemonicParsing="false" text="10:00AM" />
-                                    <MenuItem mnemonicParsing="false" text="11:00AM" />
-                                    <MenuItem mnemonicParsing="false" text="12:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="1:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="2:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="3:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="4:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="5:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="6:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="7:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="8:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="9:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="10:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="11:00PM" />
-                                </items>
-                              </MenuButton>
-                              <MenuButton fx:id="endTimeField" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" text="End Time">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="8:00AM" />
-                                  <MenuItem mnemonicParsing="false" text="9:00AM" />
-                                    <MenuItem mnemonicParsing="false" text="10:00AM" />
-                                    <MenuItem mnemonicParsing="false" text="11:00AM" />
-                                    <MenuItem mnemonicParsing="false" text="12:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="1:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="2:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="3:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="4:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="5:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="6:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="7:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="8:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="9:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="10:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="11:00PM" />
-                                    <MenuItem mnemonicParsing="false" text="12:00AM" />
-                                </items>
-                              </MenuButton>
+                              <HBox fillHeight="false" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
+                                 <children>
+                                    <DatePicker fx:id="dateChoice" />
+                                    <MenuButton fx:id="startTimeField" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="Start Time ">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="7:00AM" />
+                                        <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="8:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="9:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="10:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="11:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="12:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="1:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="2:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="3:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="4:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="5:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="6:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="7:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="8:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="9:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="10:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleStartTime" text="11:00PM" />
+                                      </items>
+                                    </MenuButton>
+                                    <MenuButton fx:id="endTimeField" mnemonicParsing="false" prefHeight="25.0" prefWidth="120.0" text="End Time">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="8:00AM" />
+                                        <MenuItem mnemonicParsing="false" text="9:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="10:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="11:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="12:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="1:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="2:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="3:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="4:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="5:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="6:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="7:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="8:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="9:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="10:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="11:00PM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="12:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="1:00AM" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEndTime" text="2:00AM" />
+                                      </items>
+                                    </MenuButton>
+                                 </children>
+                              </HBox>
                               <Label text="Event Name:" />
                               <TextField fx:id="eventNameField" prefHeight="32.0" prefWidth="450.0" />
-                              <RadioButton fx:id="privateEventRadioButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="105.0" text="Private Event" />
-                              <Button fx:id="submitField" mnemonicParsing="false" onAction="#handleSubmitEventBooking" prefHeight="25.0" prefWidth="80.0" text="Submit" />
+                              <Label text="Event Type:" />
+                              <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
+                                 <children>
+                                    <MenuButton fx:id="eventTypeChoice" mnemonicParsing="false" text="Select Event Type">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#handleEventType" text="Wedding" />
+                                        <MenuItem mnemonicParsing="false" onAction="#handleEventType" text="Performance" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEventType" text="Meeting" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEventType" text="Networking" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEventType" text="Charity" />
+                                          <MenuItem mnemonicParsing="false" onAction="#handleEventType" text="Other" />
+                                      </items>
+                                    </MenuButton>
+                                    <RadioButton fx:id="privateEventRadioButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="105.0" text="Private Event" />
+                                 </children>
+                              </HBox>
+                              <Button fx:id="calcFeeButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#handleCalcFee" prefWidth="170.0" text="Calculate Fee: " />
+                              <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="submitField" alignment="CENTER" mnemonicParsing="false" onAction="#handleSubmitEventBooking" prefHeight="25.0" prefWidth="80.0" text="Submit">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <Label fx:id="eventBookingSuccess" />
                            </children>
                         </VBox>
                      </content>
                   </ScrollPane>
                   <ScrollPane fx:id="cancelBookingPane" layoutX="13.0" layoutY="86.0" prefHeight="435.0" prefWidth="455.0" visible="false">
                      <content>
-                        <VBox fx:id="eventCancellation" prefHeight="430.0" prefWidth="450.0">
+                        <VBox fx:id="eventCancellation" prefHeight="430.0" prefWidth="450.0" spacing="20.0">
                            <children>
-                              <VBox prefHeight="100.0" prefWidth="100.0" />
-                              <MenuButton fx:id="bookingCancelSelection" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Cancel">
+                              <VBox fx:id="cancelBookingVBox" prefHeight="100.0" prefWidth="100.0" spacing="10.0" />
+                              <MenuButton fx:id="bookingCancelSelection" mnemonicParsing="false" prefHeight="25.0" prefWidth="210.0" text="Select a Booking to Cancel">
                                 <items>
                                   <MenuItem mnemonicParsing="false" text="Action 1" />
                                   <MenuItem mnemonicParsing="false" text="Action 2" />
                                 </items>
                               </MenuButton>
-                              <Button fx:id="submitCancellation" mnemonicParsing="false" onAction="#handleSubmitCancellation" text="Submit" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="submitCancellation" alignment="CENTER" mnemonicParsing="false" onAction="#handleSubmitCancellation" text="Submit" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="cancelSuccessLabel" />
                            </children>
                         </VBox>
                      </content>
