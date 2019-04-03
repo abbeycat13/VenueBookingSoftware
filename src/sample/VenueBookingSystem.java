@@ -41,15 +41,16 @@ public class VenueBookingSystem extends Application {
      * Note: UI elements need to be declared here in order to be referenced in code
      */
     @FXML
-    TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField, newEmailField, eventNameField;
+    TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField,
+            newPassField, newEmailField, updatePhoneField, updateEmailField, eventNameField;
     @FXML
-    PasswordField passwordField, newPassField;
+    PasswordField passwordField,updatePasswordField;
     @FXML
     Label msgText, clientIDLabel, eventBookingSuccess, cancelSuccessLabel;
     @FXML
     VBox bookingVBox, venuesVBox, cancelBookingVBox, eventCalendarVBox;
     @FXML
-    Pane loginPane, registerPane, mainPane;
+    Pane loginPane, registerPane, mainPane, updatePane;
     @FXML
     ScrollPane viewBookingsPane, bookEventPane, cancelBookingPane, eventCalendarPane;
     @FXML
@@ -165,6 +166,7 @@ public class VenueBookingSystem extends Application {
             case "Update Contact Info":
             {
                 screenChange();
+                updatePane.setVisible(true);
                 // TO DO !!
                 // Use Scene Builder to create a new pane (inside the main pain) with 3 text fields for user to update
                 // their password, phone, and/or email. Also need a submit button, which will need a method (already
@@ -400,13 +402,23 @@ public class VenueBookingSystem extends Application {
      * METHOD: handleUpdateInfo
      *
      */
-    //@FXML
-    //private void handleUpdateInfo(ActionEvent event) {
-    //    client.setId(FIELDNAME.getText());
-    //    client.setPassword(FIELDNAME.getText());
-    //    client.setPhoneNumber(FIELDNAME.getText());
-    //    client.setEmailAddress(FIELDNAME.getText());
-    //}
+    @FXML
+    private void handleUpdateInfo(ActionEvent event) {
+        client.setPassword(updatePasswordField.getText());
+        client.setPhoneNumber(updatePhoneField.getText());
+        client.setEmailAddress(updateEmailField.getText());
+        if (client.getPhoneNumber() == 0)
+            msgText.setText("Invalid phone number. Please enter all 10 digits.");
+        else if (client.getEmailAddress().equals("INVALID"))
+            msgText.setText("Invalid email address.");
+        else {
+            client.addToDatabase();
+            // clear input fields
+            updatePasswordField.setText(null);
+            updatePhoneField.setText(null);
+            updateEmailField.setText(null);
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);

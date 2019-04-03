@@ -1,5 +1,6 @@
 package sample;
 
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -127,13 +128,23 @@ public class EventBooking {
     /**
      * METHOD: getAllEvents
      * RETURNS: ArrayList of EventBookings containing all the events in database
+     * DONE!!!
      */
     public static ArrayList<EventBooking> getAllEvents(){
         ArrayList<EventBooking> allEvents = new ArrayList<>();
-
-        // TO DO !!
-        // search database for all events and add data to array list
-        // basically the same as the viewBookings method in Client class without the if statement
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+            Statement statement = conn.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
+                    "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
+                    "feePaid INTEGER)");
+            // search event database for client ID
+            ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
+            statement.close();
+            conn.close();
+        } catch (SQLException e){
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
 
         return allEvents;
     }

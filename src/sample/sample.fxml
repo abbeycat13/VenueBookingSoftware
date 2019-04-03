@@ -25,7 +25,7 @@
    <children>
       <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0">
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0" visible="false">
                <children>
                   <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
                   <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
@@ -63,7 +63,7 @@
                   <Label fx:id="msgText" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
                </children>
             </Pane>
-            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0" visible="false">
+            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0">
                <children>
                   <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="42.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0">
                      <children>
@@ -206,6 +206,18 @@
                         <VBox fx:id="eventCalendarVBox" prefHeight="200.0" prefWidth="450.0" />
                      </content>
                   </ScrollPane>
+                  <Pane fx:id="updatePane" layoutX="-5.0" layoutY="-3.0" prefHeight="500.0" prefWidth="500.0">
+                     <children>
+                        <TextField fx:id="updateEmailField" layoutX="176.0" layoutY="299.0" />
+                        <TextField fx:id="updatePhoneField" layoutX="176.0" layoutY="360.0" />
+                        <Button layoutX="325.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleUpdateInfo" text="Submit" />
+                        <Label layoutX="51.0" layoutY="242.0" text="New Password" />
+                        <Label layoutX="62.0" layoutY="303.0" text="New Email" />
+                        <Label layoutX="36.0" layoutY="364.0" text="New Phone Number" />
+                        <Label layoutX="76.0" layoutY="163.0" text="Please enter your new information:" />
+                        <PasswordField fx:id="updatePasswordField" layoutX="176.0" layoutY="238.0" />
+                     </children>
+                  </Pane>
                </children>
             </Pane>
          </children>
