@@ -1,9 +1,6 @@
 package sample;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -18,8 +15,8 @@ public class Venue {
     private String name;
     private String address;
     private String city;
+    private Long phoneNum;
     private Integer capacity;
-    private Long phoneNum; // probably don't need this
 
     /**
      * no arg constructor
@@ -30,12 +27,12 @@ public class Venue {
     /**
      * constructor
      */
-    public Venue(String name, String address, String city, Integer capacity, Long phoneNum) {
+    public Venue(String name, String address, String city, Long phoneNum, Integer capacity) {
         this.name = name;
         this.address = address;
         this.city = city;
-        this.capacity = capacity;
         this.phoneNum = phoneNum;
+        this.capacity = capacity;
     }
 
     /**
@@ -118,12 +115,15 @@ public class Venue {
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS venues (name TEXT, address TEXT, city TEXT, " +
-                    "phone INTEGER, capacity INTEGER");
-
-            // TO DO !!
-            // search database for all venues and add data to array list
-
-
+                    "phone INTEGER, capacity INTEGER)");
+            // search database for all venues
+            ResultSet rs = statement.executeQuery("SELECT * FROM venues");
+            while (rs.next()) {
+                // instantiate a venue from data and add to arraylist
+                allVenues.add(new Venue(rs.getString("name"), rs.getString("address"),
+                        rs.getString("city"), rs.getLong("phone"),
+                        rs.getInt("capacity")));
+            }
             statement.close();
             conn.close();
         } catch (SQLException e){

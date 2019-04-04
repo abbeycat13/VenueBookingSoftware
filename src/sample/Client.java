@@ -230,8 +230,8 @@ public class Client {
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
-                    "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
-                    "feePaid INTEGER)");
+                    "venue TEXT, privateEvent TEXT, date TEXT, startTime TEXT, endTime TEXT, fee REAL, " +
+                    "feePaid TEXT)");
             // search event database for client ID
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
             while (rs.next()) {
@@ -239,10 +239,10 @@ public class Client {
                 {
                     // convert booleans
                     boolean privateEvent = false;
-                    if (rs.getInt("privateEvent") == 1)
+                    if (rs.getString("privateEvent").equals("true"))
                         privateEvent = true;
                     boolean feePaid = false;
-                    if (rs.getInt("feePaid") == 1)
+                    if (rs.getString("feePaid").equals("true"))
                         feePaid = true;
                     // instantiate an event from data and add to arraylist
                     clientBookings.add(new EventBooking(rs.getString("name"), rs.getString("type"),
@@ -270,9 +270,8 @@ public class Client {
      * NOT immediately when they press the 'Book Event' button at the top of the screen
      */
     public String bookEvent(EventBooking event){
-        boolean bookingSuccess = false;
+        boolean bookingSuccess = true; // assume true by default -- after testing, this works best
         boolean venueNotAvailable = false;
-
         String ID = event.getClientID();
         String venue = event.getVenue();
         String name = event.getEventName();
@@ -287,34 +286,37 @@ public class Client {
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
-                    "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
-                    "feePaid INTEGER)");
+                    "venue TEXT, privateEvent TEXT, date TEXT, startTime TEXT, endTime TEXT, fee REAL, " +
+                    "feePaid TEXT)");
             // search event database for selected venue
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
+            if (!rs.next()) { // if no events in database, booking is successful
+                bookingSuccess = true;
+            }
             // for each event in database, check if venue matches selected venue
             // if it does, check if date matches selected date (i.e. there is a booking conflict)
             // also make sure client does not have a booking with the same name on the same date
             // (this could cause issues with the cancellation method)
             while (rs.next()) {
-                if (rs.getString("Venue").equals(venue) && rs.getString("Date").equals(date)) {
+                if (rs.getString("venue").equals(venue) && rs.getString("date").equals(date)) {
                     bookingSuccess = false;
                     venueNotAvailable = true;
                 }
                 else if (rs.getString("clientID").equals(ID) && rs.getString("name").equals(name)
                         && rs.getString("date").equals(date))
                     bookingSuccess = false;
-                else {
-                    statement.execute("INSERT INTO events (name, type, clientID,  privateEvent, date, start, end, fee, feePaid)" +
-                            "VALUES ('" + name + "', '" + type + "', '" + ID + "', '" + privateEvent
-                            + "', '" + date + "', '" + start + "', '" + end + "', '" + fee + "', '" + feePaid + "')");
+                else
                     bookingSuccess = true;
-                    }
-
             }
+            if (bookingSuccess) // if booking is successful, add to database
+                statement.execute("INSERT INTO events (name, type, clientID, venue, privateEvent, date, startTime, endTime, fee, feePaid)" +
+                        "VALUES ('" + name + "', '" + type + "', '" + ID + "', '" + venue + "', '" + privateEvent
+                        + "', '" + date + "', '" + start + "', '" + end + "', '" + fee + "', '" + feePaid + "')");
             statement.close();
             conn.close();
         } catch (SQLException e){
             System.out.println("Something went wrong: " + e.getMessage());
+            return "ERROR -- Try removing special characters from your event name.";
         }
         if (bookingSuccess)
             return "Your event has been booked!";
@@ -339,16 +341,18 @@ public class Client {
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
-                    "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
-                    "feePaid INTEGER)");
+                    "venue TEXT, privateEvent TEXT, date TEXT, startTime TEXT, endTime TEXT, fee REAL, " +
+                    "feePaid TEXT)");
             // search event database for client ID
             // then check if event name matches the event they want to cancel
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
             while (rs.next()) {
                 if (rs.getString("clientID").equals(event.getClientID())) {
                     if (rs.getString("name").equals(event.getEventName())) {
-                        statement.execute("DELETE FROM events WHERE(name, clientID, date) VALUES ('"
-                                +event.getEventName()+ "', '" + "', '" +event.getClientID()+ "', '" +event.getEventDate()+ "')");
+                        //statement.execute("DELETE FROM events WHERE(name, clientID, date) VALUES('"
+                         //       +event.getEventName()+ "', '" +event.getClientID()+ "', '" +event.getEventDate()+ "')");
+                        statement.execute("DELETE FROM events WHERE name = '"+event.getEventName()+"' AND clientID = '"+
+                                event.getClientID()+"' AND date = '"+event.getEventDate()+"'");
                         cancelSuccess = true;
                     }
                     else

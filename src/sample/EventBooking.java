@@ -136,16 +136,29 @@ public class EventBooking {
             Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
             Statement statement = conn.createStatement();
             statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
-                    "venue TEXT, privateEvent INTEGER, date TEXT, startTime INTEGER, endTime INTEGER, fee REAL, " +
-                    "feePaid INTEGER)");
+                    "venue TEXT, privateEvent TEXT, date TEXT, startTime TEXT, endTime TEXT, fee REAL, " +
+                    "feePaid TEXT)");
             // search event database for client ID
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
+            while (rs.next()) {
+                // convert booleans
+                boolean privateEvent = false;
+                if (rs.getInt("privateEvent") == 1)
+                    privateEvent = true;
+                boolean feePaid = false;
+                if (rs.getInt("feePaid") == 1)
+                    feePaid = true;
+                // instantiate an event from data and add to arraylist
+                allEvents.add(new EventBooking(rs.getString("name"), rs.getString("type"),
+                        rs.getString("clientID"), rs.getString("venue"), privateEvent,
+                        rs.getString("date"), rs.getString("startTime"),
+                        rs.getString("endTime"), rs.getDouble("fee"), feePaid));
+            }
             statement.close();
             conn.close();
         } catch (SQLException e){
             System.out.println("Something went wrong: " + e.getMessage());
         }
-
         return allEvents;
     }
 
@@ -159,9 +172,14 @@ public class EventBooking {
         return this.eventName + " on " + this.eventDate;
     }
 
+    /**
+     * METHOD: calcFee
+     * DESCRIPTION: Used to calculate the fee for a booking.
+     * @param venue
+     * @return double containing the booking fee for an event
+     */
     public Double calcFee(Venue venue){
         Double fee = 0.0;
-
 
         String digits = "";
         Double start = 0.0;
@@ -169,11 +187,11 @@ public class EventBooking {
         boolean stpm = false;
         boolean etpm = false;
         // this part converts a String to Integer -- removes all non-digit characters before parsing
-        for (int i = 0; i < this.getStartTime().length(); ++i)
+        for (int i = 0; i < this.startTime.length(); ++i)
         {
-            if (Character.isDigit(this.getStartTime().charAt(i)))
-                digits += this.getStartTime().charAt(i);
-            else if (this.getStartTime().charAt(i)=='P')
+            if (Character.isDigit(this.startTime.charAt(i)))
+                digits += this.startTime.charAt(i);
+            else if (this.startTime.charAt(i)=='P')
                 stpm = true;
         }
         start = start.parseDouble(digits);
@@ -181,26 +199,28 @@ public class EventBooking {
             start += 1200.0; // covert to 24 hour format, e.g. 7PM will parse to 700, add 1200 = 1900
         // do the same for end time
         digits = "";
-        for (int i = 0; i < this.getEndTime().length(); ++i)
+        for (int i = 0; i < this.endTime.length(); ++i)
         {
-            if (Character.isDigit(this.getEndTime().charAt(i)))
-                digits += this.getEndTime().charAt(i);
-            else if (this.getEndTime().charAt(i)=='P')
+            if (Character.isDigit(this.endTime.charAt(i)))
+                digits += this.endTime.charAt(i);
+            else if (this.endTime.charAt(i)=='P')
                 etpm = true;
         }
-        end = start.parseDouble(digits);
+        end = end.parseDouble(digits);
         if (etpm && end >= 100.0) // don't do this for 12pm
             end += 1200.0;
+        if (!etpm && end < 400.0) // do this for hours after midnight
+            end += 2400.0;
 
 
-        fee = (venue.getCapacity().doubleValue() / 4.0) * (end - start);
+        fee = (venue.getCapacity().doubleValue() / 10.0) * ((end - start)/100);
         switch (this.getEventType()){
             case "Wedding": {
                 fee *= 2.0;
                 break;
             }
             case "Charity": {
-                fee *= 0.75;
+                fee *= 0.5;
                 break;
             }
             default: {
@@ -208,11 +228,10 @@ public class EventBooking {
             }
         }
         if (!this.isPrivateEvent && !this.eventType.equals("Charity"))
-            fee *= 2.0;
+            fee *= 1.5;
         if (fee > 0.0)
             return fee;
         else
             return 0.0;
     }
-
 }

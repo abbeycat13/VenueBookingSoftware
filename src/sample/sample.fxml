@@ -23,9 +23,9 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Pane prefHeight="560.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Pane prefHeight="600.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0" visible="false">
+            <Pane fx:id="loginPane" layoutX="40.0" layoutY="108.0" prefHeight="300.0" prefWidth="400.0">
                <children>
                   <TextField fx:id="clientIDField" layoutX="145.0" layoutY="123.0" />
                   <PasswordField fx:id="passwordField" layoutX="145.0" layoutY="163.0" />
@@ -34,7 +34,7 @@
                   <Label layoutX="145.0" layoutY="89.0" text="Existing User:" />
                   <Button fx:id="btLogin" layoutX="145.0" layoutY="206.0" mnemonicParsing="false" onAction="#handleLogin" text="Login" />
                   <Button fx:id="btNewUser" layoutX="229.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleButtonClick" text="New User" />
-                  <Label fx:id="msgText" layoutX="67.0" layoutY="247.0" prefHeight="17.0" prefWidth="305.0" />
+                  <Label fx:id="loginSuccessLabel" layoutX="67.0" layoutY="247.0" prefHeight="17.0" prefWidth="305.0" />
                </children>
             </Pane>
             <Pane fx:id="registerPane" layoutX="41.0" layoutY="80.0" prefHeight="400.0" prefWidth="400.0" visible="false">
@@ -60,10 +60,10 @@
                      </children>
                   </VBox>
                   <Button fx:id="btRegister" layoutX="186.0" layoutY="249.0" mnemonicParsing="false" onAction="#handleReg" text="Register New User" />
-                  <Label fx:id="msgText" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
+                  <Label fx:id="regSuccessLabel" layoutX="13.0" layoutY="298.0" prefHeight="17.0" prefWidth="374.0" />
                </children>
             </Pane>
-            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="480.0">
+            <Pane fx:id="mainPane" layoutY="2.0" prefHeight="560.0" prefWidth="580.0" visible="false">
                <children>
                   <HBox fx:id="menuBar" alignment="CENTER" layoutX="14.0" layoutY="42.0" prefHeight="31.0" prefWidth="453.0" spacing="10.0">
                      <children>
@@ -74,9 +74,9 @@
                      </children>
                   </HBox>
                   <Label fx:id="clientIDLabel" layoutX="14.0" layoutY="14.0" text="Client: " />
-                  <ScrollPane fx:id="viewBookingsPane" layoutX="14.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0" visible="false">
+                  <ScrollPane fx:id="viewBookingsPane" layoutX="-4.0" layoutY="80.0" prefHeight="435.0" prefWidth="490.0" visible="false">
                      <content>
-                        <VBox fx:id="bookingVBox" alignment="TOP_CENTER" prefHeight="460.0" prefWidth="440.0" spacing="20.0" />
+                        <VBox fx:id="bookingVBox" prefHeight="460.0" prefWidth="440.0" spacing="5.0" />
                      </content>
                   </ScrollPane>
                   <HBox alignment="BOTTOM_RIGHT" layoutX="14.0" layoutY="515.0" prefHeight="38.0" prefWidth="455.0" spacing="10.0">
@@ -85,12 +85,12 @@
                         <Button fx:id="btLogOut" mnemonicParsing="false" onAction="#handleButtonClick" text="Log Out" />
                      </children>
                   </HBox>
-                  <ScrollPane fx:id="bookEventPane" layoutX="13.0" layoutY="80.0" prefHeight="435.0" prefWidth="455.0" visible="false">
+                  <ScrollPane fx:id="bookEventPane" layoutX="-3.0" layoutY="80.0" prefHeight="435.0" prefWidth="490.0" visible="false">
                      <content>
                         <VBox fx:id="bookEventVBox" prefHeight="430.0" prefWidth="450.0" spacing="10.0">
                            <children>
                               <Label text="Select a venue:" />
-                              <VBox fx:id="venuesVBox" prefHeight="100.0" prefWidth="100.0" />
+                              <VBox fx:id="venuesVBox" prefHeight="100.0" prefWidth="100.0" spacing="5.0" />
                               <MenuButton fx:id="venueChoice" mnemonicParsing="false" text="Select Venue">
                                 <items>
                                   <MenuItem mnemonicParsing="false" text="Action 1" />
@@ -165,8 +165,8 @@
                                     <RadioButton fx:id="privateEventRadioButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="105.0" text="Private Event" />
                                  </children>
                               </HBox>
-                              <Button fx:id="calcFeeButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#handleCalcFee" prefWidth="170.0" text="Calculate Fee: " />
-                              <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
+                              <Button fx:id="calcFeeButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#handleCalcFee" prefWidth="220.0" text="Calculate Fee: " />
+                              <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="30.0" prefWidth="180.0" spacing="10.0">
                                  <children>
                                     <Button fx:id="submitField" alignment="CENTER" mnemonicParsing="false" onAction="#handleSubmitEventBooking" prefHeight="25.0" prefWidth="80.0" text="Submit">
                                        <HBox.margin>
@@ -174,48 +174,55 @@
                                        </HBox.margin>
                                     </Button>
                                  </children>
+                                 <VBox.margin>
+                                    <Insets right="60.0" />
+                                 </VBox.margin>
                               </HBox>
                               <Label fx:id="eventBookingSuccess" />
                            </children>
                         </VBox>
                      </content>
                   </ScrollPane>
-                  <ScrollPane fx:id="cancelBookingPane" layoutX="13.0" layoutY="86.0" prefHeight="435.0" prefWidth="455.0" visible="false">
+                  <ScrollPane fx:id="cancelBookingPane" layoutX="-3.0" layoutY="80.0" prefHeight="435.0" prefWidth="490.0" visible="false">
                      <content>
                         <VBox fx:id="eventCancellation" prefHeight="430.0" prefWidth="450.0" spacing="20.0">
                            <children>
-                              <VBox fx:id="cancelBookingVBox" prefHeight="100.0" prefWidth="100.0" spacing="10.0" />
+                              <VBox fx:id="cancelBookingVBox" prefHeight="100.0" prefWidth="100.0" spacing="5.0" />
                               <MenuButton fx:id="bookingCancelSelection" mnemonicParsing="false" prefHeight="25.0" prefWidth="210.0" text="Select a Booking to Cancel">
                                 <items>
                                   <MenuItem mnemonicParsing="false" text="Action 1" />
                                   <MenuItem mnemonicParsing="false" text="Action 2" />
                                 </items>
                               </MenuButton>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="200.0">
+                              <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="180.0">
                                  <children>
                                     <Button fx:id="submitCancellation" alignment="CENTER" mnemonicParsing="false" onAction="#handleSubmitCancellation" text="Submit" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets right="60.0" />
+                                 </VBox.margin>
                               </HBox>
                               <Label fx:id="cancelSuccessLabel" />
                            </children>
                         </VBox>
                      </content>
                   </ScrollPane>
-                  <ScrollPane fx:id="eventCalendarPane" layoutX="17.0" layoutY="79.0" prefHeight="430.0" prefWidth="450.0" visible="false">
+                  <ScrollPane fx:id="eventCalendarPane" layoutX="-3.0" layoutY="80.0" prefHeight="430.0" prefWidth="490.0" visible="false">
                      <content>
-                        <VBox fx:id="eventCalendarVBox" prefHeight="200.0" prefWidth="450.0" />
+                        <VBox fx:id="eventCalendarVBox" prefHeight="200.0" prefWidth="450.0" spacing="5.0" />
                      </content>
                   </ScrollPane>
-                  <Pane fx:id="updatePane" layoutX="-5.0" layoutY="-3.0" prefHeight="500.0" prefWidth="500.0">
+                  <Pane fx:id="updatePane" layoutX="13.0" layoutY="77.0" prefHeight="435.0" prefWidth="455.0" visible="false">
                      <children>
-                        <TextField fx:id="updateEmailField" layoutX="176.0" layoutY="299.0" />
-                        <TextField fx:id="updatePhoneField" layoutX="176.0" layoutY="360.0" />
-                        <Button layoutX="325.0" layoutY="429.0" mnemonicParsing="false" onAction="#handleUpdateInfo" text="Submit" />
-                        <Label layoutX="51.0" layoutY="242.0" text="New Password" />
-                        <Label layoutX="62.0" layoutY="303.0" text="New Email" />
-                        <Label layoutX="36.0" layoutY="364.0" text="New Phone Number" />
-                        <Label layoutX="76.0" layoutY="163.0" text="Please enter your new information:" />
-                        <PasswordField fx:id="updatePasswordField" layoutX="176.0" layoutY="238.0" />
+                        <TextField fx:id="updateEmailField" layoutX="192.0" layoutY="163.0" prefWidth="200.0" />
+                        <TextField fx:id="updatePhoneField" layoutX="192.0" layoutY="218.0" prefWidth="200.0" />
+                        <Button layoutX="192.0" layoutY="283.0" mnemonicParsing="false" onAction="#handleUpdateInfo" text="Submit" />
+                        <Label layoutX="74.0" layoutY="113.0" text="New Password:" />
+                        <Label layoutX="101.0" layoutY="168.0" text="New Email:" />
+                        <Label layoutX="46.0" layoutY="223.0" text="New Phone Number:" />
+                        <Label layoutX="62.0" layoutY="44.0" text="Please enter your new information." />
+                        <PasswordField fx:id="updatePasswordField" layoutX="192.0" layoutY="108.0" prefWidth="200.0" />
+                        <Label fx:id="updateSuccessLabel" layoutX="62.0" layoutY="336.0" />
                      </children>
                   </Pane>
                </children>

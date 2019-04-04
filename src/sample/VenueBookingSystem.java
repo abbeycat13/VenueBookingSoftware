@@ -46,7 +46,7 @@ public class VenueBookingSystem extends Application {
     @FXML
     PasswordField passwordField,updatePasswordField;
     @FXML
-    Label msgText, clientIDLabel, eventBookingSuccess, cancelSuccessLabel;
+    Label loginSuccessLabel, regSuccessLabel, updateSuccessLabel, clientIDLabel, eventBookingSuccess, cancelSuccessLabel;
     @FXML
     VBox bookingVBox, venuesVBox, cancelBookingVBox, eventCalendarVBox;
     @FXML
@@ -101,7 +101,7 @@ public class VenueBookingSystem extends Application {
             }
             // if not found, print error message
             if (!loginSuccess)
-                msgText.setText("Login failed. Try again or register a new user.");
+                loginSuccessLabel.setText("Login failed. Try again or register a new user.");
             statement.close();
             conn.close();
         } catch (SQLException e){
@@ -131,7 +131,12 @@ public class VenueBookingSystem extends Application {
                     Separator separator = new Separator();
                     venuesVBox.getChildren().addAll(nameLabel, addressLabel, capacityLabel, separator);
                 }
-                // also display names in drop-down menu
+                // display names in drop-down menu
+                for (Venue venue : Venue.getAllVenues()) {
+                    MenuItem venueOption = new MenuItem(venue.getName());
+                    venueOption.setOnAction(this::handleVenueChoice);
+                    venueChoice.getItems().add(venueOption);
+                }
                 break;
             }
             case "Cancel Booking":
@@ -143,7 +148,9 @@ public class VenueBookingSystem extends Application {
                 // add each event's name and date to drop-down menu
                 for (EventBooking eventBooking : client.getBookings()) {
                     MenuItem cancelSelection = new MenuItem(eventBooking.toString());
+                    cancelSelection.setOnAction(this::handleCancelSelection);
                     bookingCancelSelection.getItems().add(cancelSelection);
+                    // set on action
                 }
                 break;
             }
@@ -167,14 +174,6 @@ public class VenueBookingSystem extends Application {
             {
                 screenChange();
                 updatePane.setVisible(true);
-                // TO DO !!
-                // Use Scene Builder to create a new pane (inside the main pain) with 3 text fields for user to update
-                // their password, phone, and/or email. Also need a submit button, which will need a method (already
-                // started -- handleUpdateInfo around Line #360) that does the following:
-                //          1) use setters in the client class to set password, phone, email to values in the text
-                //             fields, but only IF those values are not null AND IF they are valid -- look at the
-                //             handleReg method (Line #228) for how to do this
-                //          2) then call the client.addtodatabase() method to update the database with new info
                 break;
             }
             case "Log Out":
@@ -190,7 +189,8 @@ public class VenueBookingSystem extends Application {
         }
     }
 
-    // Headache-saving method.
+    // Headache-saving method. Resets almost literally everything.
+    // Runs every time the user clicks a button to change screens within the main pane.
     private void screenChange(){
         // set all screens to non-visible
         bookEventPane.setVisible(false);
@@ -215,9 +215,15 @@ public class VenueBookingSystem extends Application {
         eventTypeChoice.setText("Select Event Type");
         privateEventRadioButton.setSelected(false);
         calcFeeButton.setText("Calculate Fee: ");
+        updateEmailField.setText(null);
+        updatePhoneField.setText(null);
+        updatePasswordField.setText(null);
         // clear all labels
         eventBookingSuccess.setText(null);
         cancelSuccessLabel.setText(null);
+        regSuccessLabel.setText(null);
+        updateSuccessLabel.setText(null);
+        loginSuccessLabel.setText(null);
     }
 
     /**
@@ -239,11 +245,11 @@ public class VenueBookingSystem extends Application {
         client.setPhoneNumber(newPhoneField.getText());
         client.setEmailAddress(newEmailField.getText());
         if (client.getId().equals("INVALID"))
-            msgText.setText("That ID is already in use.");
+            regSuccessLabel.setText("That ID is already in use.");
         else if (client.getPhoneNumber() == 0)
-            msgText.setText("Invalid phone number. Please enter all 10 digits.");
+            regSuccessLabel.setText("Invalid phone number. Please enter all 10 digits.");
         else if (client.getEmailAddress().equals("INVALID"))
-            msgText.setText("Invalid email address.");
+            regSuccessLabel.setText("Invalid email address.");
         else {
             client.addToDatabase(); // add new client to database
             registerPane.setVisible(false); // hide register pane
@@ -287,6 +293,11 @@ public class VenueBookingSystem extends Application {
         eventTypeChoice.setText(choice.getText());
     }
     @FXML
+    private void handleVenueChoice(ActionEvent event){
+        MenuItem choice = (MenuItem) event.getSource();
+        venueChoice.setText(choice.getText());
+    }
+    @FXML
     private void handleCalcFee(ActionEvent event){
         EventBooking eventBooking = new EventBooking();
         Venue eventVenue = new Venue();
@@ -301,20 +312,28 @@ public class VenueBookingSystem extends Application {
         eventBooking.setStartTime(startTimeField.getText());
         eventBooking.setEndTime(endTimeField.getText());
         eventBooking.setEventType(eventTypeChoice.getText());
-        calcFeeButton.setText("Calculate Fee: "+ eventBooking.calcFee(eventVenue));
+        calcFeeButton.setText("Calculate Fee: "+ NumberFormat.getCurrencyInstance().format(eventBooking.calcFee(eventVenue)));
     }
     @FXML
     private void handleSubmitEventBooking(ActionEvent event){
-
         EventBooking eventBooking = new EventBooking();
         eventBooking.setEventName(eventNameField.getText());
         eventBooking.setVenue(venueChoice.getText());
         eventBooking.setStartTime(startTimeField.getText());
         eventBooking.setEndTime(endTimeField.getText());
+        eventBooking.setEventType(eventTypeChoice.getText());
+        eventBooking.setEventDate(dateChoice.getValue().toString());
+        eventBooking.setClientID(client.getId());
         if(privateEventRadioButton.isSelected())
             eventBooking.setPrivateEvent(true);
         else
             eventBooking.setPrivateEvent(false);
+        Venue eventVenue = new Venue();
+        for (Venue venue : Venue.getAllVenues()) {
+            if (venue.getName().equals(venueChoice.getText()))
+                eventVenue = venue;
+        }
+        eventBooking.setBookingFee(eventBooking.calcFee(eventVenue));
         // check if start time is after end time -- if so, event cannot be booked
         String digits = "";
         Integer start = 0;
@@ -342,11 +361,13 @@ public class VenueBookingSystem extends Application {
                 etpm = true;
         }
         end = start.parseInt(digits);
-        if (etpm && end >= 100)
+        if (etpm && end >= 100) // don't do this for 12pm
             end += 1200;
+        if (!etpm && end < 400.0) // do this for hours after midnight
+            end += 2400;
         // if end time is before or same as start time, unless end time is after 12am, event cannot be booked
         if ((end <= start) && !(!etpm && (end == 1200 || end < 700)))
-            eventBookingSuccess.setText("This event cannot be booked. Check that your start time is correct.");
+            eventBookingSuccess.setText("Event cannot be booked. Check that your start/end times are correct.");
         else
             eventBookingSuccess.setText(client.bookEvent(eventBooking));
     }
@@ -357,6 +378,11 @@ public class VenueBookingSystem extends Application {
      * DESCRIPTION: Matches user's selection with a booking in the database,
      * then calls the cancelBooking method in Client class
      */
+    @FXML
+    private void handleCancelSelection(ActionEvent event){
+        MenuItem choice = (MenuItem) event.getSource();
+        bookingCancelSelection.setText(choice.getText());
+    }
     @FXML
     private void handleSubmitCancellation(ActionEvent event){
         EventBooking cancelBooking = new EventBooking();
@@ -385,7 +411,7 @@ public class VenueBookingSystem extends Application {
             Label venueLabel = new Label(eventBooking.getVenue());
             eventVBox.getChildren().addAll(dateLabel, nameLabel, timeLabel, venueLabel);
             // only display fee for the current client's bookings
-            if (eventBooking.getClientID() == client.getId()) {
+            if (eventBooking.getClientID().equals(client.getId())) {
                 Label feeLabel = new Label("Booking Fee: " +
                         NumberFormat.getCurrencyInstance().format(eventBooking.getBookingFee()) + " Paid? ");
                 if (eventBooking.isFeePaid())
@@ -399,18 +425,24 @@ public class VenueBookingSystem extends Application {
     }
 
     /**
-     * METHOD: handleUpdateInfo
+     * METHOD: handleUpdateInfo | Update Contact Info Screen
+     *
+     * DESCRIPTION: Runs when user clicks 'Submit' button after updating their  password
+     * and/or contact info. Validates input, and if valid, updates the database.
      *
      */
     @FXML
     private void handleUpdateInfo(ActionEvent event) {
-        client.setPassword(updatePasswordField.getText());
-        client.setPhoneNumber(updatePhoneField.getText());
-        client.setEmailAddress(updateEmailField.getText());
+        if (updatePasswordField.getText() != null)
+            client.setPassword(updatePasswordField.getText());
+        if (updatePhoneField.getText() != null)
+            client.setPhoneNumber(updatePhoneField.getText());
+        if (updateEmailField.getText() != null)
+            client.setEmailAddress(updateEmailField.getText());
         if (client.getPhoneNumber() == 0)
-            msgText.setText("Invalid phone number. Please enter all 10 digits.");
+            updateSuccessLabel.setText("Invalid phone number. Please enter all 10 digits.");
         else if (client.getEmailAddress().equals("INVALID"))
-            msgText.setText("Invalid email address.");
+            updateSuccessLabel.setText("Invalid email address.");
         else {
             client.addToDatabase();
             // clear input fields
