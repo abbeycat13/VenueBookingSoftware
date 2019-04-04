@@ -143,10 +143,10 @@ public class EventBooking {
             while (rs.next()) {
                 // convert booleans
                 boolean privateEvent = false;
-                if (rs.getInt("privateEvent") == 1)
+                if (rs.getString("privateEvent").equals("true"))
                     privateEvent = true;
                 boolean feePaid = false;
-                if (rs.getInt("feePaid") == 1)
+                if (rs.getString("feePaid").equals("true"))
                     feePaid = true;
                 // instantiate an event from data and add to arraylist
                 allEvents.add(new EventBooking(rs.getString("name"), rs.getString("type"),

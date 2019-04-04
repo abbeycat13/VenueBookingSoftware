@@ -139,11 +139,14 @@ public class Client {
             if (Character.isDigit(input.charAt(i)))
                 digits += input.charAt(i);
         }
-        phoneNum = phoneNum.parseLong(digits);
-        if (phoneNum < 10000000000L && phoneNum > 999999999L)
-            this.phoneNumber = phoneNum;
-        else
-            this.phoneNumber = 0L;
+        if (!digits.equals("")) {
+            phoneNum = phoneNum.parseLong(digits);
+            if (phoneNum < 10000000000L && phoneNum > 999999999L)
+                this.phoneNumber = phoneNum;
+            else
+                this.phoneNumber = 0L;
+        }
+        else this.phoneNumber = 0L;
     }
 
     /**
@@ -198,9 +201,9 @@ public class Client {
             while (rs.next() && !idExists) { // searches until ID is found or there are no more records
                 if (id.equals(rs.getString("id")))
                 {
-                    statement.execute("UPDATE clients SET password = '"+this.getPassword()+"', phone = '"+
-                            this.getPhoneNumber()+"', email = '"+this.getEmailAddress()+"' WHERE id = '"+
-                            this.getId()+"'");
+                    statement.execute("UPDATE clients SET password = '"+this.password+"', phone = '"+
+                            this.phoneNumber+"', email = '"+this.emailAddress+"' WHERE id = '"+
+                            this.id+"'");
                 }
             }
             // if not found, create a new record

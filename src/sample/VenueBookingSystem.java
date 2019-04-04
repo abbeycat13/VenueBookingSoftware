@@ -197,6 +197,7 @@ public class VenueBookingSystem extends Application {
         viewBookingsPane.setVisible(false);
         eventCalendarPane.setVisible(false);
         cancelBookingPane.setVisible(false);
+        updatePane.setVisible(false);
         // empty all VBoxes
         bookingVBox.getChildren().clear();
         cancelBookingVBox.getChildren().clear();
@@ -210,14 +211,14 @@ public class VenueBookingSystem extends Application {
         venueChoice.setText("Select a venue");
         startTimeField.setText("Start Time");
         endTimeField.setText("End Time");
-        eventNameField.setText(null);
+        eventNameField.setText("");
         dateChoice.setValue(null);
         eventTypeChoice.setText("Select Event Type");
         privateEventRadioButton.setSelected(false);
         calcFeeButton.setText("Calculate Fee: ");
-        updateEmailField.setText(null);
-        updatePhoneField.setText(null);
-        updatePasswordField.setText(null);
+        updateEmailField.setText("");
+        updatePhoneField.setText("");
+        updatePasswordField.setText("");
         // clear all labels
         eventBookingSuccess.setText(null);
         cancelSuccessLabel.setText(null);
@@ -238,30 +239,36 @@ public class VenueBookingSystem extends Application {
     @FXML
     private void handleReg(ActionEvent event) {
         client = new Client();
-        client.setId(newIDField.getText());
-        client.setPassword(newPassField.getText());
-        client.setFirstName(newFNField.getText());
-        client.setLastName(newLNField.getText());
-        client.setPhoneNumber(newPhoneField.getText());
-        client.setEmailAddress(newEmailField.getText());
-        if (client.getId().equals("INVALID"))
-            regSuccessLabel.setText("That ID is already in use.");
-        else if (client.getPhoneNumber() == 0)
-            regSuccessLabel.setText("Invalid phone number. Please enter all 10 digits.");
-        else if (client.getEmailAddress().equals("INVALID"))
-            regSuccessLabel.setText("Invalid email address.");
+        if (newIDField.getText().length() > 80 || newPassField.getText().length() > 80 ||
+                newFNField.getText().length() > 80 || newLNField.getText().length() > 80 ||
+                newEmailField.getText().length() > 80 || newPhoneField.getText().length() > 80)
+            regSuccessLabel.setText("ERROR -- one or more of your input fields is too long.");
         else {
-            client.addToDatabase(); // add new client to database
-            registerPane.setVisible(false); // hide register pane
-            mainPane.setVisible(true); // show main screen
-            clientIDLabel.setText("Client: "+client.getFirstName()+" "+client.getLastName());
-            // clear input fields
-            newIDField.setText(null);
-            newPassField.setText(null);
-            newFNField.setText(null);
-            newLNField.setText(null);
-            newPhoneField.setText(null);
-            newEmailField.setText(null);
+            client.setId(newIDField.getText());
+            client.setPassword(newPassField.getText());
+            client.setFirstName(newFNField.getText());
+            client.setLastName(newLNField.getText());
+            client.setPhoneNumber(newPhoneField.getText());
+            client.setEmailAddress(newEmailField.getText());
+            if (client.getId().equals("INVALID"))
+                regSuccessLabel.setText("That ID is already in use.");
+            else if (client.getPhoneNumber() == 0)
+                regSuccessLabel.setText("Invalid phone number. Please enter all 10 digits.");
+            else if (client.getEmailAddress().equals("INVALID"))
+                regSuccessLabel.setText("Invalid email address.");
+            else {
+                client.addToDatabase(); // add new client to database
+                registerPane.setVisible(false); // hide register pane
+                mainPane.setVisible(true); // show main screen
+                clientIDLabel.setText("Client: " + client.getFirstName() + " " + client.getLastName());
+                // clear input fields
+                newIDField.setText(null);
+                newPassField.setText(null);
+                newFNField.setText(null);
+                newLNField.setText(null);
+                newPhoneField.setText(null);
+                newEmailField.setText(null);
+            }
         }
     }
 
@@ -317,59 +324,61 @@ public class VenueBookingSystem extends Application {
     @FXML
     private void handleSubmitEventBooking(ActionEvent event){
         EventBooking eventBooking = new EventBooking();
-        eventBooking.setEventName(eventNameField.getText());
-        eventBooking.setVenue(venueChoice.getText());
-        eventBooking.setStartTime(startTimeField.getText());
-        eventBooking.setEndTime(endTimeField.getText());
-        eventBooking.setEventType(eventTypeChoice.getText());
-        eventBooking.setEventDate(dateChoice.getValue().toString());
-        eventBooking.setClientID(client.getId());
-        if(privateEventRadioButton.isSelected())
-            eventBooking.setPrivateEvent(true);
-        else
-            eventBooking.setPrivateEvent(false);
-        Venue eventVenue = new Venue();
-        for (Venue venue : Venue.getAllVenues()) {
-            if (venue.getName().equals(venueChoice.getText()))
-                eventVenue = venue;
+        if (eventNameField.getText().length() > 80)
+            eventBookingSuccess.setText("ERROR -- event name is too long.");
+        else {
+            eventBooking.setEventName(eventNameField.getText());
+            eventBooking.setVenue(venueChoice.getText());
+            eventBooking.setStartTime(startTimeField.getText());
+            eventBooking.setEndTime(endTimeField.getText());
+            eventBooking.setEventType(eventTypeChoice.getText());
+            eventBooking.setEventDate(dateChoice.getValue().toString());
+            eventBooking.setClientID(client.getId());
+            if (privateEventRadioButton.isSelected())
+                eventBooking.setPrivateEvent(true);
+            else
+                eventBooking.setPrivateEvent(false);
+            Venue eventVenue = new Venue();
+            for (Venue venue : Venue.getAllVenues()) {
+                if (venue.getName().equals(venueChoice.getText()))
+                    eventVenue = venue;
+            }
+            eventBooking.setBookingFee(eventBooking.calcFee(eventVenue));
+            // check if start time is after end time -- if so, event cannot be booked
+            String digits = "";
+            Integer start = 0;
+            Integer end = 0;
+            boolean stpm = false;
+            boolean etpm = false;
+            // this part converts a String to Integer -- removes all non-digit characters before parsing
+            for (int i = 0; i < eventBooking.getStartTime().length(); ++i) {
+                if (Character.isDigit(eventBooking.getStartTime().charAt(i)))
+                    digits += eventBooking.getStartTime().charAt(i);
+                else if (eventBooking.getStartTime().charAt(i) == 'P')
+                    stpm = true;
+            }
+            start = start.parseInt(digits);
+            if (stpm && start >= 100) // don't do this for 12pm
+                start += 1200; // covert to 24 hour format, e.g. 7PM will parse to 700, add 1200 = 1900
+            // do the same for end time
+            digits = "";
+            for (int i = 0; i < eventBooking.getEndTime().length(); ++i) {
+                if (Character.isDigit(eventBooking.getEndTime().charAt(i)))
+                    digits += eventBooking.getEndTime().charAt(i);
+                else if (eventBooking.getEndTime().charAt(i) == 'P')
+                    etpm = true;
+            }
+            end = start.parseInt(digits);
+            if (etpm && end >= 100) // don't do this for 12pm
+                end += 1200;
+            if (!etpm && end < 400.0) // do this for hours after midnight
+                end += 2400;
+            // if end time is before or same as start time, unless end time is after 12am, event cannot be booked
+            if ((end <= start) && !(!etpm && (end == 1200 || end < 700)))
+                eventBookingSuccess.setText("Event cannot be booked. Check that your start/end times are correct.");
+            else
+                eventBookingSuccess.setText(client.bookEvent(eventBooking));
         }
-        eventBooking.setBookingFee(eventBooking.calcFee(eventVenue));
-        // check if start time is after end time -- if so, event cannot be booked
-        String digits = "";
-        Integer start = 0;
-        Integer end = 0;
-        boolean stpm = false;
-        boolean etpm = false;
-        // this part converts a String to Integer -- removes all non-digit characters before parsing
-        for (int i = 0; i < eventBooking.getStartTime().length(); ++i)
-        {
-            if (Character.isDigit(eventBooking.getStartTime().charAt(i)))
-                digits += eventBooking.getStartTime().charAt(i);
-            else if (eventBooking.getStartTime().charAt(i)=='P')
-                stpm = true;
-        }
-        start = start.parseInt(digits);
-        if (stpm && start >= 100) // don't do this for 12pm
-            start += 1200; // covert to 24 hour format, e.g. 7PM will parse to 700, add 1200 = 1900
-        // do the same for end time
-        digits = "";
-        for (int i = 0; i < eventBooking.getEndTime().length(); ++i)
-        {
-            if (Character.isDigit(eventBooking.getEndTime().charAt(i)))
-                digits += eventBooking.getEndTime().charAt(i);
-            else if (eventBooking.getEndTime().charAt(i)=='P')
-                etpm = true;
-        }
-        end = start.parseInt(digits);
-        if (etpm && end >= 100) // don't do this for 12pm
-            end += 1200;
-        if (!etpm && end < 400.0) // do this for hours after midnight
-            end += 2400;
-        // if end time is before or same as start time, unless end time is after 12am, event cannot be booked
-        if ((end <= start) && !(!etpm && (end == 1200 || end < 700)))
-            eventBookingSuccess.setText("Event cannot be booked. Check that your start/end times are correct.");
-        else
-            eventBookingSuccess.setText(client.bookEvent(eventBooking));
     }
 
 
@@ -433,22 +442,35 @@ public class VenueBookingSystem extends Application {
      */
     @FXML
     private void handleUpdateInfo(ActionEvent event) {
-        if (updatePasswordField.getText() != null)
-            client.setPassword(updatePasswordField.getText());
-        if (updatePhoneField.getText() != null)
-            client.setPhoneNumber(updatePhoneField.getText());
-        if (updateEmailField.getText() != null)
-            client.setEmailAddress(updateEmailField.getText());
-        if (client.getPhoneNumber() == 0)
-            updateSuccessLabel.setText("Invalid phone number. Please enter all 10 digits.");
-        else if (client.getEmailAddress().equals("INVALID"))
-            updateSuccessLabel.setText("Invalid email address.");
+        if (updatePasswordField.getText().length() > 80 || updateEmailField.getText().length() > 80 ||
+                updatePhoneField.getText().length() > 80)
+            updateSuccessLabel.setText("ERROR -- one or more of your input fields is too long.");
         else {
-            client.addToDatabase();
-            // clear input fields
-            updatePasswordField.setText(null);
-            updatePhoneField.setText(null);
-            updateEmailField.setText(null);
+            if (updatePasswordField.getText().equals(""))
+                client.setPassword(client.getPassword());
+            else
+                client.setPassword(updatePasswordField.getText());
+            if (updatePhoneField.getText().equals(""))
+                client.setPhoneNumber(client.getPhoneNumber().toString());
+            else
+                client.setPhoneNumber(updatePhoneField.getText());
+            if (updateEmailField.getText().equals(""))
+                client.setEmailAddress(client.getEmailAddress());
+            else
+                client.setEmailAddress(updateEmailField.getText());
+
+            if (client.getPhoneNumber() == 0)
+                updateSuccessLabel.setText("Invalid phone number. Please enter all 10 digits.");
+            else if (client.getEmailAddress().equals("INVALID"))
+                updateSuccessLabel.setText("Invalid email address.");
+            else {
+                client.addToDatabase();
+                updateSuccessLabel.setText("Your information was updated.");
+                // clear input fields
+                updatePasswordField.setText("");
+                updatePhoneField.setText("");
+                updateEmailField.setText("");
+            }
         }
     }
 

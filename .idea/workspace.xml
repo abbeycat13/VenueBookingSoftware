@@ -5,9 +5,7 @@
       <change beforePath="$PROJECT_DIR$/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/database.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/EventBooking.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/EventBooking.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/Venue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Venue.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/VenueBookingSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/VenueBookingSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/sample.fxml" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -64,26 +62,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/VenueBookingSystem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="331">
-              <caret line="367" column="95" selection-start-line="367" selection-start-column="95" selection-end-line="367" selection-end-column="95" />
+            <state relative-caret-position="191">
+              <caret line="453" column="59" lean-forward="true" selection-start-line="453" selection-start-column="59" selection-end-line="453" selection-end-column="59" />
               <folding>
-                <element signature="e#17370#17371#0" expanded="true" />
-                <element signature="e#17398#17399#0" expanded="true" />
+                <element signature="e#20962#20963#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="318" column="77" lean-forward="true" selection-start-line="318" selection-start-column="77" selection-end-line="318" selection-end-column="77" />
+            <state relative-caret-position="217">
+              <caret line="143" column="19" lean-forward="true" selection-start-line="143" selection-start-column="19" selection-end-line="143" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#3943#3944#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -92,8 +90,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/EventBooking.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="677">
-              <caret line="215" column="79" lean-forward="true" selection-start-line="215" selection-start-column="79" selection-end-line="215" selection-end-column="79" />
+            <state relative-caret-position="385">
+              <caret line="160" column="9" lean-forward="true" selection-start-line="160" selection-start-column="9" selection-end-line="160" selection-end-column="9" />
               <folding>
                 <element signature="e#4976#4977#0" expanded="true" />
                 <element signature="e#5039#5040#0" expanded="true" />
@@ -150,17 +148,17 @@
         <option value="$PROJECT_DIR$/src/sample/login.fxml" />
         <option value="$PROJECT_DIR$/src/sample/Controller.java" />
         <option value="$PROJECT_DIR$/src/sample/Venue.java" />
-        <option value="$PROJECT_DIR$/src/sample/EventBooking.java" />
         <option value="$PROJECT_DIR$/src/sample/sample.fxml" />
-        <option value="$PROJECT_DIR$/src/sample/VenueBookingSystem.java" />
+        <option value="$PROJECT_DIR$/src/sample/EventBooking.java" />
         <option value="$PROJECT_DIR$/src/sample/Client.java" />
+        <option value="$PROJECT_DIR$/src/sample/VenueBookingSystem.java" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
     <option name="y" value="24" />
-    <option name="width" value="1329" />
+    <option name="width" value="1253" />
     <option name="height" value="876" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -208,7 +206,7 @@
     <property name="OverrideImplement.combined" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554379592096" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554398485478" />
     <property name="dynamic.classpath" value="false" />
     <property name="last_opened_file_path" value="C:/Program Files (x86)/Oracle/JavaFX Scene Builder 2.0/JavaFX Scene Builder 2.0.exe" />
     <property name="project.structure.last.edited" value="Libraries" />
@@ -321,10 +319,10 @@
     <option name="totallyTimeSpent" value="7232000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="24" width="1329" height="876" extended-state="0" />
+    <frame x="0" y="24" width="1253" height="876" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.12820514" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.13625103" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" />
       <window_info id="Designer" order="3" />
@@ -442,21 +440,10 @@
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/VenueBookingSystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="367" column="95" selection-start-line="367" selection-start-column="95" selection-end-line="367" selection-end-column="95" />
-          <folding>
-            <element signature="e#17370#17371#0" expanded="true" />
-            <element signature="e#17398#17399#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/EventBooking.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="677">
-          <caret line="215" column="79" lean-forward="true" selection-start-line="215" selection-start-column="79" selection-end-line="215" selection-end-column="79" />
+        <state relative-caret-position="385">
+          <caret line="160" column="9" lean-forward="true" selection-start-line="160" selection-start-column="9" selection-end-line="160" selection-end-column="9" />
           <folding>
             <element signature="e#4976#4977#0" expanded="true" />
             <element signature="e#5039#5040#0" expanded="true" />
@@ -466,10 +453,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="318" column="77" lean-forward="true" selection-start-line="318" selection-start-column="77" selection-end-line="318" selection-end-column="77" />
+        <state relative-caret-position="217">
+          <caret line="143" column="19" lean-forward="true" selection-start-line="143" selection-start-column="19" selection-end-line="143" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3943#3944#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/VenueBookingSystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="453" column="59" lean-forward="true" selection-start-line="453" selection-start-column="59" selection-end-line="453" selection-end-column="59" />
+          <folding>
+            <element signature="e#20962#20963#0" expanded="true" />
           </folding>
         </state>
       </provider>
