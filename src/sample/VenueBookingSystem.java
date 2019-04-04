@@ -4,6 +4,7 @@ import com.sun.xml.internal.ws.commons.xmlutil.Converter;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.text.*;
 import javafx.fxml.FXMLLoader;
@@ -212,7 +213,7 @@ public class VenueBookingSystem extends Application {
         startTimeField.setText("Start Time");
         endTimeField.setText("End Time");
         eventNameField.setText("");
-        dateChoice.setValue(null);
+        dateChoice.setValue(LocalDate.now());
         eventTypeChoice.setText("Select Event Type");
         privateEventRadioButton.setSelected(false);
         calcFeeButton.setText("Calculate Fee: ");
@@ -239,10 +240,15 @@ public class VenueBookingSystem extends Application {
     @FXML
     private void handleReg(ActionEvent event) {
         client = new Client();
+        // ensure input is not absurdly long
         if (newIDField.getText().length() > 80 || newPassField.getText().length() > 80 ||
                 newFNField.getText().length() > 80 || newLNField.getText().length() > 80 ||
                 newEmailField.getText().length() > 80 || newPhoneField.getText().length() > 80)
             regSuccessLabel.setText("ERROR -- one or more of your input fields is too long.");
+        else if (newIDField.getText().equals("") || newPassField.getText().equals("") ||
+                newPhoneField.getText().equals("") || newLNField.getText().equals("") ||
+                newFNField.getText().equals("") || newEmailField.getText().equals(""))
+            regSuccessLabel.setText("ERROR -- all fields must be complete.");
         else {
             client.setId(newIDField.getText());
             client.setPassword(newPassField.getText());
@@ -283,7 +289,6 @@ public class VenueBookingSystem extends Application {
      * handleSubmitEventBooking - books the event, or displays an error message
      *
      */
-
     @FXML
     private void handleStartTime(ActionEvent event){
         MenuItem choice = (MenuItem) event.getSource();
@@ -324,8 +329,13 @@ public class VenueBookingSystem extends Application {
     @FXML
     private void handleSubmitEventBooking(ActionEvent event){
         EventBooking eventBooking = new EventBooking();
-        if (eventNameField.getText().length() > 80)
+        if (eventNameField.getText().length() > 80) // ensure input is not absurdly long
             eventBookingSuccess.setText("ERROR -- event name is too long.");
+        // ensure no fields are left blank
+        else if (eventNameField.getText().equals("") || venueChoice.getText().equals("Select a venue") ||
+                startTimeField.getText().equals("Start Time") || endTimeField.getText().equals("End Time") ||
+                dateChoice.getValue().equals(LocalDate.now()) || eventTypeChoice.getText().equals("Select Event Type"))
+            eventBookingSuccess.setText("ERROR -- all fields must be complete.");
         else {
             eventBooking.setEventName(eventNameField.getText());
             eventBooking.setVenue(venueChoice.getText());

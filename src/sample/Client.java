@@ -204,6 +204,7 @@ public class Client {
                     statement.execute("UPDATE clients SET password = '"+this.password+"', phone = '"+
                             this.phoneNumber+"', email = '"+this.emailAddress+"' WHERE id = '"+
                             this.id+"'");
+                    idExists = true;
                 }
             }
             // if not found, create a new record
