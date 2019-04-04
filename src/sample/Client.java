@@ -2,13 +2,12 @@ package sample;
 
 import java.sql.*;
 import java.util.ArrayList;
-import javafx.scene.*;
 
 /**
  * CLIENT CLASS
  * This file contains the Client class, and methods to control the client's event bookings.
  *
- * METHODS: addToDatabase, bookEvent, cancelBooking, viewBookings
+ * METHODS: addToDatabase, getBookings, bookEvent, cancelBooking
  */
 
 public class Client {
@@ -21,7 +20,7 @@ public class Client {
     private String emailAddress;
 
     /**
-     *  CONSTRUCTOR
+     *  NO-ARG CONSTRUCTOR
      */
     public Client() {
     }
@@ -48,7 +47,7 @@ public class Client {
 
     /**
      * SET ID
-     * Note: Checks the client database to ensure that the ID is
+     * Checks the client database to ensure that the ID is
      * not already in use -- if it is, sets ID to "INVALID"
      */
     public void setId(String id) {
@@ -128,8 +127,8 @@ public class Client {
 
     /**
      * SET PHONE NUMBER
-     * Note: Removes all non-digits from input string before parsing to Double,
-     * and ensuring that the number is exactly 10 digits -- if invalid, sets to 0.0
+     * Removes all non-digits from input string before parsing to Long, and
+     * ensuring that the number is exactly 10 digits -- if invalid, sets to 0
      */
     public void setPhoneNumber(String input) {
         String digits = "";
@@ -158,7 +157,7 @@ public class Client {
 
     /**
      * SET EMAIL ADDRESS
-     * Note: Checks that input follows correct email address format: text@text.text --
+     * Checks that input follows correct email address format: text@text.text --
      * if invalid, sets to "INVALID"
      */
     public void setEmailAddress(String emailAddress) {
@@ -184,10 +183,10 @@ public class Client {
 
     /**
      * METHOD: addToDatabase
+     *
      * DESCRIPTION: Searches the database for client ID -- if found, updates the data (password and contact
      * info only). If not found, creates a new record with the current client data.
      *
-     * Note: works for creating new records. Unsure about updating existing records -- needs testing.
      */
     public void addToDatabase(){
         try{
@@ -222,11 +221,12 @@ public class Client {
 
     /**
      * METHOD: getBookings
+     *
      * DESCRIPTION: Searches database for all of a client's bookings and stores them in an ArrayList.
      * Should be called when user clicks the 'View Bookings' button.
+     *
      * RETURNS: ArrayList of EventBookings
      *
-     * THIS IS DONE!!!
      */
     public ArrayList<EventBooking> getBookings(){
         ArrayList<EventBooking> clientBookings = new ArrayList<>();
@@ -265,13 +265,15 @@ public class Client {
 
     /**
      * METHOD: bookEvent
-     * DESCRIPTION: This method should receive the user's input somehow (maybe it takes an EventBooking as a
-     * parameter), then check the database to ensure that the venue is available on the selected date. If so,
-     * add new event data to event database. Else, allow the user to try again somehow.
-     * RETURNS: void? (probably -- or a string that will be shown on the UI)
      *
-     * Note: call this method after user has filled out form with event details and attempts to book the event,
-     * NOT immediately when they press the 'Book Event' button at the top of the screen
+     * DESCRIPTION: This method takes an EventBooking as a parameter, then check the database to ensure that the
+     * venue is available on the selected date and there is no duplicate event. If all is good, add new event data
+     * to event database. Else, return an error message.
+     *
+     * @param event - EventBooking containing the event to be booked
+     *
+     * RETURNS: String to be output to the UI giving the result
+     *
      */
     public String bookEvent(EventBooking event){
         boolean bookingSuccess = true; // assume true by default -- after testing, this works best
@@ -332,12 +334,14 @@ public class Client {
 
     /**
      * METHOD: cancelBooking
-     * DESCRIPTION: This method should perform the mechanics of cancelling a client's booking. Probably accepts an
-     * EventBooking as parameter. It should remove the particular event from the database.
-     * RETURNS: void? (probably -- or a string that will be shown on the UI)
      *
-     * Note: should be called after user has selected which booking they would like to cancel, NOT immediately when
-     * they press the 'Cancel Booking' button at the top of the screen
+     * DESCRIPTION: This method performs the mechanics of cancelling a client's booking. Accepts an
+     * EventBooking as parameter, then searches the database for a matching event, and removes it.
+     *
+     * @param event - EventBooking containing the event to be canceled
+     *
+     * RETURNS: String to be output to the UI giving the result
+     *
      */
     public String cancelBooking(EventBooking event){
         boolean cancelSuccess = false;
@@ -348,7 +352,7 @@ public class Client {
                     "venue TEXT, privateEvent TEXT, date TEXT, startTime TEXT, endTime TEXT, fee REAL, " +
                     "feePaid TEXT)");
             // search event database for client ID
-            // then check if event name matches the event they want to cancel
+            // then check if event name and date match the event they want to cancel
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
             while (rs.next()) {
                 if (rs.getString("clientID").equals(event.getClientID())) {
@@ -360,7 +364,7 @@ public class Client {
                         cancelSuccess = true;
                     }
                     else
-                    cancelSuccess = false; // event not found
+                    cancelSuccess = false; // event not found (i.e. they left the selection field blank)
                 }
             }
             statement.close();

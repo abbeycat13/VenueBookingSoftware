@@ -1,6 +1,5 @@
 package sample;
 
-import com.sun.xml.internal.ws.commons.xmlutil.Converter;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import java.sql.*;
@@ -14,9 +13,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
-
-import javax.swing.*;
-import javax.xml.soap.Text;
 
 
 /**
@@ -36,10 +32,10 @@ public class VenueBookingSystem extends Application {
         primaryStage.show();
     }
 
-    private Client client;
+    private Client client; // initialize the client
 
     /**
-     * Note: UI elements need to be declared here in order to be referenced in code
+     * UI elements need to be declared here in order to be referenced in code
      */
     @FXML
     TextField clientIDField, newIDField, newFNField, newLNField, newPhoneField,
@@ -72,7 +68,6 @@ public class VenueBookingSystem extends Application {
      * Checks if Client ID is in the database -- if found, checks if password matches.
      * If not found, or password is incorrect, shows error message.
      *
-     * THIS IS DONE!!!
      */
     @FXML
     private void handleLogin(ActionEvent event) {
@@ -110,9 +105,14 @@ public class VenueBookingSystem extends Application {
         }
     }
 
+    /**
+     * METHOD: handleButtonClick
+     * Runs whenever the user clicks on any of the main buttons.
+     * Generally, these methods simply show/hide the various panes.
+     */
     @FXML
     private void handleButtonClick(ActionEvent event){
-        Button button = (Button) event.getSource();
+        Button button = (Button) event.getSource(); // this determines which button was clicked
         switch (button.getText()){
             case "New User": // show new user registration screen
             {
@@ -123,7 +123,7 @@ public class VenueBookingSystem extends Application {
             case "Book Event":
             {
                 screenChange();
-                bookEventPane.setVisible(true);
+                bookEventPane.setVisible(true); // show event booking screen
                 // get all venue options and display them
                 for (Venue venue : Venue.getAllVenues()) {
                     Label nameLabel = new Label(venue.getName());
@@ -132,10 +132,10 @@ public class VenueBookingSystem extends Application {
                     Separator separator = new Separator();
                     venuesVBox.getChildren().addAll(nameLabel, addressLabel, capacityLabel, separator);
                 }
-                // display names in drop-down menu
+                // display venue names in drop-down menu
                 for (Venue venue : Venue.getAllVenues()) {
                     MenuItem venueOption = new MenuItem(venue.getName());
-                    venueOption.setOnAction(this::handleVenueChoice);
+                    venueOption.setOnAction(this::handleVenueChoice); // this line makes the options selectable
                     venueChoice.getItems().add(venueOption);
                 }
                 break;
@@ -143,22 +143,21 @@ public class VenueBookingSystem extends Application {
             case "Cancel Booking":
             {
                 screenChange();
-                cancelBookingPane.setVisible(true);
+                cancelBookingPane.setVisible(true); // show cancel booking screen
                 // get client's bookings and display them
                 displayEvents(client.getBookings(), cancelBookingVBox);
                 // add each event's name and date to drop-down menu
                 for (EventBooking eventBooking : client.getBookings()) {
                     MenuItem cancelSelection = new MenuItem(eventBooking.toString());
-                    cancelSelection.setOnAction(this::handleCancelSelection);
+                    cancelSelection.setOnAction(this::handleCancelSelection); // this line makes the options selectable
                     bookingCancelSelection.getItems().add(cancelSelection);
-                    // set on action
                 }
                 break;
             }
             case "View Bookings":
             {
                 screenChange();
-                viewBookingsPane.setVisible(true);
+                viewBookingsPane.setVisible(true); // show view bookings screen
                 // get client's bookings and display them
                 displayEvents(client.getBookings(), bookingVBox);
                 break;
@@ -166,7 +165,7 @@ public class VenueBookingSystem extends Application {
             case "Event Calendar":
             {
                 screenChange();
-                eventCalendarPane.setVisible(true);
+                eventCalendarPane.setVisible(true); // show event calendar screen
                 // get all events and display them
                 displayEvents(EventBooking.getAllEvents(), eventCalendarVBox);
                 break;
@@ -174,7 +173,7 @@ public class VenueBookingSystem extends Application {
             case "Update Contact Info":
             {
                 screenChange();
-                updatePane.setVisible(true);
+                updatePane.setVisible(true); // show update info screen
                 break;
             }
             case "Log Out":
@@ -233,9 +232,8 @@ public class VenueBookingSystem extends Application {
      *
      * Runs when user clicks the 'Register New User' button.
      * Instantiates a client with the input data. Shows error message if data is invalid.
-     * Else, adds the new client to the database and allows them into the system.
+     * Else, adds the new client to the database and logs them into the system.
      *
-     * THIS IS DONE!!!
      */
     @FXML
     private void handleReg(ActionEvent event) {
@@ -245,6 +243,7 @@ public class VenueBookingSystem extends Application {
                 newFNField.getText().length() > 80 || newLNField.getText().length() > 80 ||
                 newEmailField.getText().length() > 80 || newPhoneField.getText().length() > 80)
             regSuccessLabel.setText("ERROR -- one or more of your input fields is too long.");
+        // ensure no fields are left blank
         else if (newIDField.getText().equals("") || newPassField.getText().equals("") ||
                 newPhoneField.getText().equals("") || newLNField.getText().equals("") ||
                 newFNField.getText().equals("") || newEmailField.getText().equals(""))
@@ -256,24 +255,25 @@ public class VenueBookingSystem extends Application {
             client.setLastName(newLNField.getText());
             client.setPhoneNumber(newPhoneField.getText());
             client.setEmailAddress(newEmailField.getText());
-            if (client.getId().equals("INVALID"))
+            if (client.getId().equals("INVALID")) // non-unique ID
                 regSuccessLabel.setText("That ID is already in use.");
-            else if (client.getPhoneNumber() == 0)
+            else if (client.getPhoneNumber() == 0) // phone number is not exactly 10 digits
                 regSuccessLabel.setText("Invalid phone number. Please enter all 10 digits.");
-            else if (client.getEmailAddress().equals("INVALID"))
+            else if (client.getEmailAddress().equals("INVALID")) // email is incorrect format
                 regSuccessLabel.setText("Invalid email address.");
             else {
                 client.addToDatabase(); // add new client to database
                 registerPane.setVisible(false); // hide register pane
                 mainPane.setVisible(true); // show main screen
+                // this part displays the client's name at the top of screen
                 clientIDLabel.setText("Client: " + client.getFirstName() + " " + client.getLastName());
                 // clear input fields
-                newIDField.setText(null);
-                newPassField.setText(null);
-                newFNField.setText(null);
-                newLNField.setText(null);
-                newPhoneField.setText(null);
-                newEmailField.setText(null);
+                newIDField.setText("");
+                newPassField.setText("");
+                newFNField.setText("");
+                newLNField.setText("");
+                newPhoneField.setText("");
+                newEmailField.setText("");
             }
         }
     }
@@ -311,12 +311,13 @@ public class VenueBookingSystem extends Application {
     }
     @FXML
     private void handleCalcFee(ActionEvent event){
-        EventBooking eventBooking = new EventBooking();
-        Venue eventVenue = new Venue();
+        EventBooking eventBooking = new EventBooking(); // initialize an event
+        Venue eventVenue = new Venue(); // find the data for selected venue and copy it here
         for (Venue venue : Venue.getAllVenues()) {
             if (venue.getName().equals(venueChoice.getText()))
                 eventVenue = venue;
         }
+        // set some of the event details to user input
         if(privateEventRadioButton.isSelected())
             eventBooking.setPrivateEvent(true);
         else
@@ -324,11 +325,12 @@ public class VenueBookingSystem extends Application {
         eventBooking.setStartTime(startTimeField.getText());
         eventBooking.setEndTime(endTimeField.getText());
         eventBooking.setEventType(eventTypeChoice.getText());
+        // calculate and display the fee
         calcFeeButton.setText("Calculate Fee: "+ NumberFormat.getCurrencyInstance().format(eventBooking.calcFee(eventVenue)));
     }
     @FXML
     private void handleSubmitEventBooking(ActionEvent event){
-        EventBooking eventBooking = new EventBooking();
+        EventBooking eventBooking = new EventBooking(); // initialize the event
         if (eventNameField.getText().length() > 80) // ensure input is not absurdly long
             eventBookingSuccess.setText("ERROR -- event name is too long.");
         // ensure no fields are left blank
@@ -337,6 +339,7 @@ public class VenueBookingSystem extends Application {
                 dateChoice.getValue().equals(LocalDate.now()) || eventTypeChoice.getText().equals("Select Event Type"))
             eventBookingSuccess.setText("ERROR -- all fields must be complete.");
         else {
+            // set event details to user input
             eventBooking.setEventName(eventNameField.getText());
             eventBooking.setVenue(venueChoice.getText());
             eventBooking.setStartTime(startTimeField.getText());
@@ -348,12 +351,16 @@ public class VenueBookingSystem extends Application {
                 eventBooking.setPrivateEvent(true);
             else
                 eventBooking.setPrivateEvent(false);
-            Venue eventVenue = new Venue();
+            eventBooking.setFeePaid(false); // this value is always going to be false because there is no way to
+                                            // actually pay the fee within this software
+
+            Venue eventVenue = new Venue(); // get the venue data
             for (Venue venue : Venue.getAllVenues()) {
                 if (venue.getName().equals(venueChoice.getText()))
                     eventVenue = venue;
             }
-            eventBooking.setBookingFee(eventBooking.calcFee(eventVenue));
+            eventBooking.setBookingFee(eventBooking.calcFee(eventVenue)); // calculate the fee
+
             // check if start time is after end time -- if so, event cannot be booked
             String digits = "";
             Integer start = 0;
@@ -387,15 +394,19 @@ public class VenueBookingSystem extends Application {
             if ((end <= start) && !(!etpm && (end == 1200 || end < 700)))
                 eventBookingSuccess.setText("Event cannot be booked. Check that your start/end times are correct.");
             else
-                eventBookingSuccess.setText(client.bookEvent(eventBooking));
+                eventBookingSuccess.setText(client.bookEvent(eventBooking)); // attempt to book the event
         }
     }
 
 
     /**
-     * METHOD: handleSubmitCancellation // 'Cancel Event' Screen
+     * THE FOLLOWING TWO METHODS WORK WITH THE 'CANCEL EVENT' SCREEN
+     *
+     * handleCancelSelection - sets the menu button text to user's selection
+     *
+     * METHOD: handleSubmitCancellation
      * DESCRIPTION: Matches user's selection with a booking in the database,
-     * then calls the cancelBooking method in Client class
+     * then calls the cancelBooking method in Client class to remove the event
      */
     @FXML
     private void handleCancelSelection(ActionEvent event){
@@ -404,13 +415,13 @@ public class VenueBookingSystem extends Application {
     }
     @FXML
     private void handleSubmitCancellation(ActionEvent event){
-        EventBooking cancelBooking = new EventBooking();
-        ArrayList<EventBooking> clientBookings = client.getBookings();
+        EventBooking cancelBooking = new EventBooking(); // initialize booking to cancel
+        ArrayList<EventBooking> clientBookings = client.getBookings(); // get client's bookings
         for (EventBooking booking : clientBookings) {
-            if (bookingCancelSelection.getText().equals(booking.toString()))
+            if (bookingCancelSelection.getText().equals(booking.toString())) // match selection to booking
                 cancelBooking = booking;
         }
-        cancelSuccessLabel.setText(client.cancelBooking(cancelBooking));
+        cancelSuccessLabel.setText(client.cancelBooking(cancelBooking)); // attempt to cancel
     }
 
 
@@ -449,15 +460,19 @@ public class VenueBookingSystem extends Application {
      * DESCRIPTION: Runs when user clicks 'Submit' button after updating their  password
      * and/or contact info. Validates input, and if valid, updates the database.
      *
+     * Note: This changes the fields in current client object no matter what.
+     * However, if the data is invalid, the database will not be affected.
+     *
      */
     @FXML
     private void handleUpdateInfo(ActionEvent event) {
+        // ensure input is not absurdly long
         if (updatePasswordField.getText().length() > 80 || updateEmailField.getText().length() > 80 ||
                 updatePhoneField.getText().length() > 80)
             updateSuccessLabel.setText("ERROR -- one or more of your input fields is too long.");
         else {
-            if (updatePasswordField.getText().equals(""))
-                client.setPassword(client.getPassword());
+            if (updatePasswordField.getText().equals("")) // only update non-empty fields
+                client.setPassword(client.getPassword()); // this code is a little redundant, but it works
             else
                 client.setPassword(updatePasswordField.getText());
             if (updatePhoneField.getText().equals(""))
@@ -469,12 +484,12 @@ public class VenueBookingSystem extends Application {
             else
                 client.setEmailAddress(updateEmailField.getText());
 
-            if (client.getPhoneNumber() == 0)
+            if (client.getPhoneNumber() == 0) // validate phone number
                 updateSuccessLabel.setText("Invalid phone number. Please enter all 10 digits.");
-            else if (client.getEmailAddress().equals("INVALID"))
+            else if (client.getEmailAddress().equals("INVALID")) // validate email address
                 updateSuccessLabel.setText("Invalid email address.");
             else {
-                client.addToDatabase();
+                client.addToDatabase(); // update database
                 updateSuccessLabel.setText("Your information was updated.");
                 // clear input fields
                 updatePasswordField.setText("");

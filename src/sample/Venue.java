@@ -107,6 +107,7 @@ public class Venue {
 
     /**
      * METHOD: getAllVenues
+     *
      * RETURNS: ArrayList of Venues containing all the venues in database
      */
     public static ArrayList<Venue> getAllVenues(){

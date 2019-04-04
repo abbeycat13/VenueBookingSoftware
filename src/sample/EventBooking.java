@@ -23,7 +23,7 @@ public class EventBooking {
     private boolean feePaid;
 
     /**
-     * CONSTRUCTOR
+     * NO-ARG CONSTRUCTOR
      */
     public EventBooking() {
     }
@@ -127,8 +127,9 @@ public class EventBooking {
 
     /**
      * METHOD: getAllEvents
+     *
      * RETURNS: ArrayList of EventBookings containing all the events in database
-     * DONE!!!
+     *
      */
     public static ArrayList<EventBooking> getAllEvents(){
         ArrayList<EventBooking> allEvents = new ArrayList<>();
@@ -138,7 +139,6 @@ public class EventBooking {
             statement.execute("CREATE TABLE IF NOT EXISTS events (name TEXT, type TEXT, clientID TEXT, " +
                     "venue TEXT, privateEvent TEXT, date TEXT, startTime TEXT, endTime TEXT, fee REAL, " +
                     "feePaid TEXT)");
-            // search event database for client ID
             ResultSet rs = statement.executeQuery("SELECT * FROM events ORDER BY date ASC");
             while (rs.next()) {
                 // convert booleans
@@ -175,12 +175,13 @@ public class EventBooking {
     /**
      * METHOD: calcFee
      * DESCRIPTION: Used to calculate the fee for a booking.
-     * @param venue
+     * @param venue - this is used to get the venue capacity
      * @return double containing the booking fee for an event
      */
     public Double calcFee(Venue venue){
-        Double fee = 0.0;
+        Double fee = 0.0; // initialize fee
 
+        // figure out the length of the event
         String digits = "";
         Double start = 0.0;
         Double end = 0.0;
@@ -212,15 +213,16 @@ public class EventBooking {
         if (!etpm && end < 400.0) // do this for hours after midnight
             end += 2400.0;
 
-
+        // calculate an hourly rate based on venue capacity and multiply by number of hours
         fee = (venue.getCapacity().doubleValue() / 10.0) * ((end - start)/100);
+
         switch (this.getEventType()){
             case "Wedding": {
-                fee *= 2.0;
+                fee *= 2.0; // double fee if it's a wedding
                 break;
             }
             case "Charity": {
-                fee *= 0.5;
+                fee *= 0.5; // discount fee for charities
                 break;
             }
             default: {
@@ -228,10 +230,10 @@ public class EventBooking {
             }
         }
         if (!this.isPrivateEvent && !this.eventType.equals("Charity"))
-            fee *= 1.5;
+            fee *= 1.5; // increase fee if event is NOT private and NOT for charity
         if (fee > 0.0)
             return fee;
         else
-            return 0.0;
+            return 0.0; // this generally means event booking is not valid
     }
 }
